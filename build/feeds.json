@@ -1,0 +1,633 @@
+[
+ {
+  "host": "lancasteronline.com",
+  "feed": "https://lancasteronline.com/search/?f=rss&t=article&c=news/local&l=25&s=start_time&sd=desc",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 25,
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "penncapital-star.com",
+  "feed": "https://penncapital-star.com/feed/",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 100,
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "triblive.com",
+  "feed": "https://triblive.com/feed/",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 25,
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "whyy.org",
+  "feed": "https://whyy.org/feed/",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 20,
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "witf.org",
+  "feed": "https://www.witf.org/feed/",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "northcentralpa.com",
+  "feed_guess": "https://northcentralpa.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.northcentralpa.com/news/dealer-uses-facebook-to-peddle-methamphetamine/article_5c07668b-b99a-4a52-b2a5-1461f2783081.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "levittownnow.com",
+  "feed_guess": "https://levittownnow.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 7,
+  "sample": "https://levittownnow.com/2026/11/17/bristol-advances-2027-budget-with-no-property-tax-increase/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "6abc.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 20,
+  "sample": "https://abc7chicago.com/post/alaska-senate-race-2026-update-democrat-mary-peltola-wins-election-beating-incumbent-republican-dan-sullivan/20049828/",
+  "feed": "https://6abc.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "wesb.com",
+  "feed_guess": "https://wesb.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 10,
+  "sample": "https://wesb.com/2026/11/17/hinsdale-fd-adds-side-by-side-to-fleet/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "wfmz.com",
+  "feed_guess": "https://wfmz.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.wfmz.com/news/area/berks/reading-prides-20th-anniversary-coming-sunday/article_18dbc4a0-0ecc-42bf-955c-f6ab043d6b6b.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "fultoncountynews.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 10,
+  "sample": "https://www.fultoncountynews.com/articles/the-names-on-the-courthouse-lawn-why-fulton-county-pauses-each-november-11/",
+  "feed": "https://www.fultoncountynews.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "nbcphiladelphia.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 52,
+  "sample": "https://www.nbcphiladelphia.com/weather/stories-weather/sunny-warmer-wednesday/4499088/",
+  "feed": "https://www.nbcphiladelphia.com/?rss=y",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "wnep.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 40,
+  "sample": "https://www.wnep.com/article/news/local/lackawanna-county/lackawanna-county-officials-emphasize-road-safety-as-holiday-travel-season-approaches-state-police/523-de388e76-1560-44a9-b32e-b942954cf226",
+  "feed": "https://www.wnep.com/feeds/syndication/rss/news/local",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "timesobserver.com",
+  "feed_guess": "https://timesobserver.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 10,
+  "sample": "https://www.timesobserver.com/sports/local-sports/2026/11/who-are-we-going-to-be/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "mychesco.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 30,
+  "sample": "https://www.mychesco.com/a/news/regional/incyte-backs-ai-screening-and-caregiver-research-for-gvhd/",
+  "feed": "https://www.mychesco.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "lockhaven.com",
+  "feed_guess": "https://lockhaven.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 10,
+  "sample": "https://www.lockhaven.com/news/local-news/2026/11/cu-mansfield-university-to-close-by-2028/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "tiogapublishing.com",
+  "feed_guess": "https://tiogapublishing.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 50,
+  "sample": "https://www.tiogapublishing.com/news/state/caucus-assignments-hint-at-priorities-for-new-pennsylvania-congress-members/article_8fbc6f8c-9abe-5ab4-b81f-463187853656.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "northpennnow.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 10,
+  "sample": "https://northpennnow.com/news-from-our-partners/why-growing-brands-are-hiring-an-ai-visibility-specialist-in-2026/",
+  "feed": "https://northpennnow.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "butlerradio.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 10,
+  "sample": "https://butlerradio.com/betty-jane-dallos/",
+  "feed": "https://butlerradio.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "lewistownsentinel.com",
+  "feed_guess": "https://lewistownsentinel.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_2.json",
+  "items_last_pull": 10,
+  "sample": "https://www.lewistownsentinel.com/uncategorized/2026/11/teacher-pay-in-pa-varies-widely-even-when-considering-local-wages/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "susqcoindy.com",
+  "feed_guess": "https://susqcoindy.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 9,
+  "sample": "https://www.susqcoindy.com/news/northern-tier-energy-companies-take-part-in-shale-insight-conference/article_fc4fb403-f8e0-4e58-b9e2-3da5cc17bc01.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "gantnews.com",
+  "feed_guess": "https://gantnews.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://gantnews.com/2026/11/17/suspect-charged-for-allegedly-passing-900-in-fake-bills-at-multiple-punxsutawney-businesses/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "yourdailylocal.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://yourdailylocal.com/warren-woman-charged-after-allegedly-providing-thc-wax-to-teen/",
+  "feed": "https://yourdailylocal.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "heraldstandard.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://www.heraldstandard.com/news/local_news/2026/nov/18/uniontown-woman-accused-of-abusing-5-month-old-son/",
+  "feed": "https://www.heraldstandard.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "beavercountian.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://beavercountian.com/content/daily/local-towns-increasing-transparency-bridgewater-launches-new-site",
+  "feed": "https://beavercountian.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "connectradio.fm",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://www.connectradio.fm/abc-business/jensen-huang-says-he-would-return-as-nvidia-ceo-amid-scandal/",
+  "feed": "https://www.connectradio.fm/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "spotlightpa.org",
+  "feed_guess": "https://spotlightpa.org/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.spotlightpa.org/news/2026/11/teacher-salary-data-pennsylvania-education/",
+  "feed": "https://www.spotlightpa.org/feeds/full.xml",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "abc27.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.abc27.com/news/top-stories/former-gettysburg-mayor-pleads-guilty-to-child-sex-crimes/",
+  "feed": "https://www.abc27.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "sharonherald.com",
+  "feed_guess": "https://sharonherald.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.sharonherald.com/news/nearby-hospitals-pick-up-sharon-regionals-patients/article_5948f0bc-80da-4897-b778-f519edb616f7.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "cumberlink.com",
+  "feed_guess": "https://cumberlink.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://cumberlink.com/news/local/article_2bee97a0-6b84-4d1d-a303-83c3eb486097.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "altoonamirror.com",
+  "feed_guess": "https://altoonamirror.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://www.altoonamirror.com/news/local-news/2026/11/area-students-to-visit-altoonas-austrian-sister-city/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "pennlive.com",
+  "feed_guess": "https://pennlive.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.pennlive.com/highschoolsports/2026/11/lancaster-county-christian-tops-mercyhurst-prep-books-first-piaa-boys-soccer-final.html",
+  "feed": "https://www.pennlive.com/arc/outboundfeeds/rss/?outputType=xml",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "2822news.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.2822news.com/news/crime-courts/man-accused-of-7000-home-improvement-fraud/",
+  "feed": "https://www.2822news.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "ncnewsonline.com",
+  "feed_guess": "https://ncnewsonline.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.ncnewsonline.com/news/police-report-post-office-mailbox-break-in/article_9af4f9dd-2813-470f-9d70-301452719f06.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "thedailyreview.com",
+  "feed_guess": "https://thedailyreview.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.thedailyreview.com/arts_and_living/athens-senior-citizens-newsletter/article_4760985e-b104-48d5-9ff6-852083bc5c6b.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "sungazette.com",
+  "feed_guess": "https://sungazette.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://www.sungazette.com/uncategorized/2026/11/two-left-homeless-in-duboistown-fire/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "lehighvalleylive.com",
+  "feed_guess": "https://lehighvalleylive.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.lehighvalleylive.com/highschoolsports/2026/11/piaa-3a-field-hockey-semifinal-photos-emmaus-vs-villa-maria-nov-17-2026.html",
+  "feed": "https://www.lehighvalleylive.com/arc/outboundfeeds/rss/?outputType=xml",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "dailyitem.com",
+  "feed_guess": "https://dailyitem.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.dailyitem.com/news/snyder-county-man-charged-with-hit-and-run-accident-threatening-police/article_f6f017c4-1253-4647-b524-8d4d573f0a57.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "thecourierexpress.com",
+  "feed_guess": "https://thecourierexpress.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.thecourierexpress.com/news/horton-twp-launches-first-zoning-ordinance-development-project-encourages-community-participation/article_b3e0fb3c-7cca-47d8-8d84-e4a975483699.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "thederrick.com",
+  "feed_guess": "https://thederrick.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.thederrick.com/news/cold-keeps-some-away-but-many-youth-still-enjoy-fishing-day/article_038abccc-23cd-4bba-8062-7450d31732dd.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "statecollege.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://www.statecollege.com/articles/penn-state-basketball/penn-state-mens-basketball-adds-midseason-commitment/",
+  "feed": "https://www.statecollege.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "yourerie.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 10,
+  "sample": "https://www.yourerie.com/news/local-news/todays-top-stories-november-17-2026/",
+  "feed": "https://www.yourerie.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "tribdem.com",
+  "feed_guess": "https://tribdem.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.tribdem.com/news/trump-heads-to-china-betting-on-unscripted-diplomacy-with-xi-and-putin/article_ec6a0eb9-e7b2-5b4c-a902-ac49e9b41c87.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "indianagazette.com",
+  "feed_guess": "https://indianagazette.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.indianagazette.com/news/local/indiana-council-advertises-7-26-million-budget-with-0-4-mill-tax-hike-for-2027/article_99653bd5-ad3a-4352-ae0c-71dd13d25518.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "huntingdondailynews.com",
+  "feed_guess": "https://huntingdondailynews.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.huntingdondailynews.com/news/the-precipice-of-adulthood/article_3857b2c1-b660-44df-8f77-d3e1d69103ac.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "lebtown.com",
+  "feed_guess": "https://lebtown.com/feed/",
+  "cms": "wordpress",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 40,
+  "sample": "https://lebtown.com/2026/11/17/bunker-hill-fire-company-unveils-new-pumper-tanker/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "wtaj.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 18,
+  "sample": "https://www.wtaj.com/crime/superior-court-denies-2nd-appeal-in-horrific-bedford-county-pet-hoarding-case/",
+  "feed": "https://www.wtaj.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "meadvilletribune.com",
+  "feed_guess": "https://meadvilletribune.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.meadvilletribune.com/news/somebodys-going-to-need-it-vernon-central-welcomes-new-engine/article_916135a5-abda-40af-91b6-3cefe4ccc2ab.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "gettysburgtimes.com",
+  "feed_guess": "https://gettysburgtimes.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 50,
+  "sample": "https://www.gettysburgtimes.com/news/property-transfers-9-17-9-23-2026/article_1c61db88-5280-488f-8fa2-44ba4d7936a0.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "observer-reporter.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "news",
+  "file": "ksnews_2026-11-19_3.json",
+  "items_last_pull": 6,
+  "sample": "https://www.observer-reporter.com/sports/2026/nov/17/ziats-out-as-jefferson-morgan-football-coach/",
+  "feed": "https://www.observer-reporter.com/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "lancasteronline.com",
+  "feed_guess": "https://lancasteronline.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://lancasteronline.com/opinion/contact-your-state-legislators/article_5d37233c-6d34-40e8-b3dd-34393d43d9fd.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "dailyitem.com",
+  "feed_guess": "https://dailyitem.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.dailyitem.com/opinion/pennsylvania-turning-its-back-on-veterans-who-served-us/article_ea6ebc64-d2ac-4f13-bc9d-8eea459181a2.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "thedailyreview.com",
+  "feed_guess": "https://thedailyreview.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.thedailyreview.com/opinion/the-curse-of-the-california-governors-race-continues/article_85840b0c-0cdb-4df4-96bc-81ec115091fb.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "sharonherald.com",
+  "feed_guess": "https://sharonherald.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.sharonherald.com/news/lifestyles/column-by-pete-sirianni-where-is-the-halftime-show-announcement/article_a3d3ad4a-6571-52cb-93c5-adcf73034080.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "cumberlink.com",
+  "feed_guess": "https://cumberlink.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://cumberlink.com/opinion/article_09fc5907-a50f-5593-8fc9-adb9abe60bf0.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "meadvilletribune.com",
+  "feed_guess": "https://meadvilletribune.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.meadvilletribune.com/opinion/coming-of-fall-means-leaves-tumble-and-political-signs-rise/article_e50d54a5-1e05-4b46-8618-dfd7af719e37.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "tiogapublishing.com",
+  "feed_guess": "https://tiogapublishing.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.tiogapublishing.com/opinion/letters-to-the-editor/article_86c3067a-5b29-47d2-916e-46a178ff56a4.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "ncnewsonline.com",
+  "feed_guess": "https://ncnewsonline.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.ncnewsonline.com/opinion/column-by-cody-w-pattison-trying-to-avoid-one-football-season-blending-into-the-next/article_a37ae47b-d886-4c0a-aa5b-ae11587eba52.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "thecourierexpress.com",
+  "feed_guess": "https://thecourierexpress.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.thecourierexpress.com/opinion/school-bus-safety-and-a-haunting-memory/article_44f3dd8a-37d7-43d7-962e-f65d0b505c62.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "penncapital-star.com",
+  "feed_guess": "",
+  "cms": "unknown",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 100,
+  "sample": "https://penncapital-star.com/campaigns-elections/gov-shapiros-popularity-and-gsd-attitude-might-not-cut-it-in-crowded-2028-democratic-field/",
+  "feed": "https://penncapital-star.com/category/commentary/feed/",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "indianagazette.com",
+  "feed_guess": "https://indianagazette.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 50,
+  "sample": "https://www.indianagazette.com/opinion/commentary-iranians-need-the-rule-of-law-not-just-a-peace-deal/article_167eb080-d1a5-5fee-846e-1c9ee40f2c28.html",
+  "last_pull": "2026-11-19"
+ },
+ {
+  "host": "gettysburgtimes.com",
+  "feed_guess": "https://gettysburgtimes.com/search/?f=rss&t=article&c=opinion&l=50&s=start_time&sd=desc",
+  "cms": "townnews",
+  "kind": "opinion",
+  "file": "ksop_2026-11-19_1.json",
+  "items_last_pull": 33,
+  "sample": "https://www.gettysburgtimes.com/opinion/bouquets-barbs/article_63b86682-ce86-11e0-b9c1-001cc4c03286.html",
+  "last_pull": "2026-11-19"
+ }
+]

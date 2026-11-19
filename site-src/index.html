@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Keystone Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Merriweather:wght@900&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: white page throughout; a white masthead with the name in navy and region tabs underlined in navy, a pale filter rail, then bordered white panels. Light only, by choice. */
+:root{
+  color-scheme:light;
+  --bg:#ffffff; --surface:#ffffff; --soft:#f5f7fa; --ink:#14213a; --muted:#566275; --line:#dde2ea;
+  --flag-blue:#0b2a6f; --flag-gold:#f2b81c; --band:#ffffff; --band-ink:#14274a; --accent:#0b2a6f; --gold:#8f6510;
+  --rep:#b3261e; --dem:#1f5fae; --track:#e9edf2; --warn:#a4500a; --good:#256b43;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body)}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+header.mast{background:var(--band);color:var(--band-ink);border-bottom:1px solid var(--line)}
+.mast-top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:16px 0 12px}
+.brand{display:flex;align-items:center;gap:10px;font:700 28px/1 var(--display);letter-spacing:.02em;text-transform:uppercase}
+.brand .bk{color:var(--flag-blue)}
+.brand .bp{background:var(--flag-blue);color:var(--flag-gold);padding:4px 8px 3px;border-radius:3px}
+.brand svg{width:26px;height:26px;flex:none}
+.tagline{color:var(--muted);font-size:13px}
+.pill{border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap}
+.spacer{flex:1}
+.powered{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-size:12px;white-space:nowrap;margin-left:auto}
+.powered:hover span{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.powered span{text-transform:uppercase;letter-spacing:.08em}
+.powered .agora-mark{width:30px;height:27px;flex:none}
+.powered b{font:900 20px/1 Merriweather,Georgia,serif;letter-spacing:-.01em;color:#002868}
+.powered b i{font-style:normal;color:#C9A84C}
+.btn{background:var(--flag-blue);color:#fff;border:0;border-radius:6px;padding:8px 14px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+nav.regions{display:flex;gap:4px;overflow-x:auto;padding-bottom:0}
+nav.regions a{color:var(--muted);text-decoration:none;font:600 18px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;padding:12px 14px;border-bottom:3px solid transparent;white-space:nowrap}
+nav.regions a small{font:500 12px var(--body);opacity:.7;margin-left:4px;letter-spacing:0}
+nav.regions a:hover{color:var(--ink)}
+nav.regions a[aria-current="page"]{color:var(--flag-blue);border-bottom-color:var(--flag-gold)}
+
+.rail{background:var(--soft);border-bottom:1px solid var(--line)}
+.rail-in{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:12px 0}
+.group{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.group > span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface);font-weight:600}
+#countyPick{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 10px;min-width:190px}
+
+main{padding:22px 0 48px;display:grid;gap:20px}
+.crumb{font-size:13px;color:var(--muted)}
+.crumb a{color:var(--accent)}
+h1{font:700 40px/1.05 var(--display);text-transform:uppercase;letter-spacing:.01em;margin:4px 0 2px;text-wrap:balance}
+h2{font:600 20px/1.1 var(--display);text-transform:uppercase;letter-spacing:.05em;margin:0}
+.sub{color:var(--muted);margin:0;max-width:65ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--flag-gold);border-radius:4px;padding:12px 14px}
+.tile b{display:block;font:700 30px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.tile span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:20px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:4px;min-width:0}
+.panel > header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.panel > header small{color:var(--muted);font-size:12px;text-align:right}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;font-weight:600;padding:8px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+th.num{font-weight:600}
+.dim{color:var(--muted);font-size:12.5px}
+.party{display:inline-block;min-width:20px;text-align:center;border-radius:3px;padding:0 5px;font-size:11px;font-weight:700;color:var(--surface);margin-left:6px;vertical-align:1px}
+.party.R{background:var(--rep)} .party.D{background:var(--dem)}
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:11px 16px;border-bottom:1px solid var(--line);display:grid;gap:3px}
+.news li:last-child{border-bottom:0}
+.news .hl{font-weight:500;color:inherit}
+td a,.dim a{color:var(--accent)}
+footer p{margin:0 0 8px;max-width:95ch}
+ul.trend,ul.ev{list-style:none;margin:0;padding:0}
+ul.trend > li{padding:12px 16px;border-bottom:1px solid var(--line);display:grid;gap:6px}
+ul.trend > li:last-child{border-bottom:0}
+.trow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.tone{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:3px;padding:1px 7px;border:1px solid var(--line);color:var(--muted)}
+.tone.warn{color:var(--warn);border-color:var(--warn)} .tone.good{color:var(--good);border-color:var(--good)} .tone.mix{color:var(--ink);border-color:var(--muted)}
+ul.ev{display:grid;gap:4px;font-size:14px}
+ul.ev a{color:inherit}
+.say{font-weight:600} .say.warn{color:var(--warn)} .say.good{color:var(--good)}
+a.tile{display:block;text-decoration:none;color:inherit}
+a.tile:hover{border-color:var(--accent)}
+a.tile[aria-current="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.tall{max-height:560px;overflow:auto}
+.tall thead th{position:sticky;top:0;background:var(--surface)}
+.tile i{display:block;font-style:normal;font-size:12px;color:var(--accent);margin-top:4px}
+a.cname{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;font-weight:500}
+a.cname:hover{text-decoration-color:var(--accent);color:var(--accent)}
+a.more{display:block;padding:10px 16px;border-top:1px solid var(--line);color:var(--accent);font-weight:600;font-size:13px;text-decoration:none}
+a.more:hover{background:var(--soft)}
+a.chip{text-decoration:none;color:inherit}
+a.chip[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface);font-weight:600}
+h1 .party{font:700 14px var(--body);vertical-align:middle;padding:2px 7px}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);font-weight:600}
+.bar{height:8px;background:var(--track);border-radius:2px;position:relative;min-width:110px;margin-top:6px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--accent);opacity:.35}
+.bar i + i{opacity:1}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+a.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 14px;text-decoration:none;color:inherit;display:grid;gap:6px;align-content:start}
+a.card:hover{border-color:var(--accent)}
+.card .name{font:600 22px/1 var(--display);text-transform:uppercase;letter-spacing:.03em;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.card .name em{font:600 14px var(--body);font-style:normal;font-variant-numeric:tabular-nums;color:var(--accent);text-transform:none;letter-spacing:0}
+.split{display:flex;height:6px;border-radius:2px;overflow:hidden;background:var(--track)}
+.split i{background:var(--rep)} .split i + i{background:var(--dem)}
+.empty{padding:18px 16px;color:var(--muted)}
+footer{color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding:16px 0 32px}
+dialog{border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);padding:20px;max-width:min(420px,92vw)}
+dialog::backdrop{background:rgba(8,12,20,.55)}
+dialog form{display:grid;gap:10px}
+dialog label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+dialog input,dialog select{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:8px 10px;color:var(--ink)}
+.row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+@media (max-width:520px){h1{font-size:32px} th,td{padding-left:12px;padding-right:12px}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <div class="mast-top">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18l-1.5 5H22l-3 13H5L2 8h2.5z" fill="var(--flag-blue)"/></svg>
+        <span class="bk">Keystone</span><span class="bp">Post</span>
+      </div>
+      <span class="tagline">County news and campaign money for Pennsylvania candidates</span>
+      <span class="spacer"></span>
+      <a class="powered" href="https://agoranow.org/?signup=1" target="_blank" rel="noopener" title="Sign up for Agora" aria-label="Powered by Agora. Sign up for Agora (opens in a new tab)"><span>Powered by</span><svg class="agora-mark" viewBox="-6.6 -3.5 53.3 48.2" aria-hidden="true"><path d="M29.6 3.4 A 19.2 19.2 0 0 1 27.8 37.5" fill="none" stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="30.7" cy="4.1" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(12 30.7 4.1)"/><ellipse cx="35.5" cy="8.7" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(32 35.5 8.7)"/><ellipse cx="38.5" cy="14.7" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(52 38.5 14.7)"/><ellipse cx="39.2" cy="21.3" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(72 39.2 21.3)"/><ellipse cx="37.5" cy="27.8" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(92 37.5 27.8)"/><ellipse cx="33.8" cy="33.3" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(112 33.8 33.3)"/><ellipse cx="29" cy="37" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(130 29 37)"/><ellipse cx="29.7" cy="9.9" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(36 29.7 9.9)"/><ellipse cx="32.6" cy="13.9" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(56 32.6 13.9)"/><ellipse cx="33.9" cy="18.5" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(76 33.9 18.5)"/><ellipse cx="33.6" cy="23.4" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(96 33.6 23.4)"/><ellipse cx="31.6" cy="27.8" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(116 31.6 27.8)"/><path d="M10.4 3.4 A 19.2 19.2 0 0 0 12.2 37.5" fill="none" stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="9.3" cy="4.1" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-12 9.3 4.1)"/><ellipse cx="4.5" cy="8.7" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-32 4.5 8.7)"/><ellipse cx="1.5" cy="14.7" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-52 1.5 14.7)"/><ellipse cx="0.8" cy="21.3" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-72 0.8 21.3)"/><ellipse cx="2.5" cy="27.8" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-92 2.5 27.8)"/><ellipse cx="6.2" cy="33.3" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-112 6.2 33.3)"/><ellipse cx="11" cy="37" rx="2.5" ry="6.2" fill="#C9A84C" transform="rotate(-130 11 37)"/><ellipse cx="10.3" cy="9.9" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(-36 10.3 9.9)"/><ellipse cx="7.4" cy="13.9" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(-56 7.4 13.9)"/><ellipse cx="6.1" cy="18.5" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(-76 6.1 18.5)"/><ellipse cx="6.4" cy="23.4" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(-96 6.4 23.4)"/><ellipse cx="8.4" cy="27.8" rx="1.8" ry="4.4" fill="#C9A84C" transform="rotate(-116 8.4 27.8)"/><path d="M20 37.5 l -6 5 l 1.5 -5 l -1.5 -5 z" fill="#C9A84C"/><path d="M20 37.5 l 6 5 l -1.5 -5 l 1.5 -5 z" fill="#C9A84C"/><circle cx="20" cy="37.5" r="1.8" fill="#C9A84C"/></svg><b><i>A</i>gora</b></a>
+      <span class="pill" id="asof">Real filings</span>
+      <button class="btn" id="accessBtn" type="button">Request access</button>
+    </div>
+    <nav class="regions" id="regionNav" aria-label="Regions"></nav>
+  </div>
+</header>
+
+<div class="rail">
+  <div class="wrap rail-in">
+    <div class="group" id="levelChips" role="group" aria-label="Race level"><span>Races</span></div>
+    <div class="group" id="partyChips" role="group" aria-label="Party"><span>Party</span></div>
+    <span class="spacer"></span>
+    <label class="group" for="countyPick"><span>Jump to county</span>
+      <select id="countyPick"></select>
+    </label>
+  </div>
+</div>
+
+<div class="wrap">
+  <main id="view"></main>
+  <footer>
+    <p><strong>Sources.</strong> Congress: FEC bulk files (candidate summaries, committee-to-candidate contributions, individual contributions, operating expenditures) for the 2025–26 cycle. Congressional donor amounts add up each person's itemized gifts to one campaign and do not subtract refunds. Governor, lieutenant governor, legislature, PACs and party committees: Pennsylvania Department of State full campaign finance export dated November 6, 2026, covering regular reports through the October 19 pre-election filing. District and ZIP code to county matching: U.S. Census Bureau 2020 relationship files.</p>
+    <p><strong>News.</strong> Headlines come from the public RSS feeds of about 50 Pennsylvania outlets, checked automatically about every 30 minutes, and are matched to counties by county, town and township names, so a few matches will be wrong. Where a county has fewer than three stories of its own, the panel adds stories from nearby counties and statewide outlets, marked Regional story or Statewide story.</p>
+    <p><strong>Trending.</strong> Issues are counted from the same local feeds plus 12 opinion pages. Tone tags are shown only where a story or letter shows residents reacting, plus 108 older items found by a web search of all 67 counties (56 had findings; items date from late 2025 through 2026, and summaries are written from headlines and excerpts). Web findings skew toward complaints, because that is what public meetings and the reporting on them mostly record. Social media is not included. This is a reading of coverage, not a poll.</p>
+    <p><strong>Use limits.</strong> Federal law bars using individual contributor information from FEC reports to solicit contributions or for commercial purposes.</p>
+    <p><strong>What is missing.</strong> County and municipal candidates file with their county election office, so they are not here. Nothing after the October pre-election reports is in yet; post-election reports are due December 3, 2026. State cash on hand is an estimate from each filer's latest report. Committees are placed in the county of their mailing address. Totals add up every filer's receipts, so money a PAC passes to a campaign is counted at both. News and Trending refresh automatically. Campaign money is a snapshot built November 17, 2026.</p>
+  </footer>
+</div>
+
+<dialog id="accessDlg" aria-labelledby="dlgTitle">
+  <form id="accessForm">
+    <h2 id="dlgTitle">Request access</h2>
+    <label for="fName">Name<input id="fName" required autocomplete="name"></label>
+    <label for="fEmail">Email<input id="fEmail" type="email" required autocomplete="email"></label>
+    <label for="fRole">I am a
+      <select id="fRole"><option>Candidate</option><option>Campaign staff</option><option>County committee member</option><option>Consultant</option></select>
+    </label>
+    <p class="dim" id="dlgNote">This form is not connected yet. Nothing is sent or stored.</p>
+    <div class="row">
+      <button class="btn ghost" type="button" id="dlgClose">Close</button>
+      <button class="btn" type="submit">Submit</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const REGIONS = {
+  northeast:{name:'Northeast',counties:['Bradford','Carbon','Lackawanna','Lehigh','Luzerne','Monroe','Northampton','Pike','Schuylkill','Sullivan','Susquehanna','Wayne','Wyoming']},
+  northwest:{name:'Northwest',counties:['Cameron','Clarion','Crawford','Elk','Erie','Forest','Jefferson','Lawrence','McKean','Mercer','Potter','Venango','Warren']},
+  southeast:{name:'Southeast',counties:['Berks','Bucks','Chester','Delaware','Lancaster','Montgomery','Philadelphia']},
+  southwest:{name:'Southwest',counties:['Allegheny','Armstrong','Beaver','Butler','Cambria','Fayette','Greene','Indiana','Somerset','Washington','Westmoreland']},
+  central:{name:'Central',counties:['Adams','Bedford','Blair','Centre','Clearfield','Clinton','Columbia','Cumberland','Dauphin','Franklin','Fulton','Huntingdon','Juniata','Lebanon','Lycoming','Mifflin','Montour','Northumberland','Perry','Snyder','Tioga','Union','York']}
+};
+const SEATS = {Adams:'Gettysburg',Allegheny:'Pittsburgh',Armstrong:'Kittanning',Beaver:'Beaver',Bedford:'Bedford',Berks:'Reading',Blair:'Hollidaysburg',Bradford:'Towanda',Bucks:'Doylestown',Butler:'Butler',Cambria:'Ebensburg',Cameron:'Emporium',Carbon:'Jim Thorpe',Centre:'Bellefonte',Chester:'West Chester',Clarion:'Clarion',Clearfield:'Clearfield',Clinton:'Lock Haven',Columbia:'Bloomsburg',Crawford:'Meadville',Cumberland:'Carlisle',Dauphin:'Harrisburg',Delaware:'Media',Elk:'Ridgway',Erie:'Erie',Fayette:'Uniontown',Forest:'Tionesta',Franklin:'Chambersburg',Fulton:'McConnellsburg',Greene:'Waynesburg',Huntingdon:'Huntingdon',Indiana:'Indiana',Jefferson:'Brookville',Juniata:'Mifflintown',Lackawanna:'Scranton',Lancaster:'Lancaster',Lawrence:'New Castle',Lebanon:'Lebanon',Lehigh:'Allentown',Luzerne:'Wilkes-Barre',Lycoming:'Williamsport',McKean:'Smethport',Mercer:'Mercer',Mifflin:'Lewistown',Monroe:'Stroudsburg',Montgomery:'Norristown',Montour:'Danville',Northampton:'Easton',Northumberland:'Sunbury',Perry:'New Bloomfield',Philadelphia:'Philadelphia',Pike:'Milford',Potter:'Coudersport',Schuylkill:'Pottsville',Snyder:'Middleburg',Somerset:'Somerset',Sullivan:'Laporte',Susquehanna:'Montrose',Tioga:'Wellsboro',Union:'Lewisburg',Venango:'Franklin',Warren:'Warren',Washington:'Washington',Wayne:'Honesdale',Westmoreland:'Greensburg',Wyoming:'Tunkhannock',York:'York'};
+const LEVELS = [['all','All'],['congress','Congress'],['statewide','Statewide'],['legislature','Legislature'],['county','Local PACs and party committees']];
+const PARTIES = [['all','All'],['R','Republican'],['D','Democratic']];
+const ALL = Object.values(REGIONS).flatMap(r=>r.counties).sort();
+const regionOf = c => Object.keys(REGIONS).find(k=>REGIONS[k].counties.includes(c));
+const slug = c => 'county-'+c.toLowerCase();
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const money = n => n==null ? '<span class="dim">n/a</span>' : Math.abs(n)>=1e6 ? '$'+(n/1e6).toFixed(Math.abs(n)>=1e7?1:2)+'M' : '$'+Math.round(n).toLocaleString('en-US');
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const pulled = () => { const a = D.meta.news_pulled_at; if(!a) return day(D.meta.news_pulled||D.meta.built); try { return new Date(a).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' ET' } catch(e){ return day(D.meta.news_pulled||D.meta.built) } };
+const day = d => !d ? 'No date filed' : d.length===7 ? `${MON[+d.slice(5,7)-1]} ${d.slice(0,4)}` : `${MON[+d.slice(5,7)-1]} ${+d.slice(8,10)}, ${d.slice(0,4)}`;
+const sum = (a,f) => a.reduce((t,x)=>t+(f(x)||0),0);
+const desc = f => (a,b)=>f(b)-f(a);
+
+let D = null;
+const state = {level:'all',party:'all'};
+// campaign record: [name, party, office, level, raised, spent, cash, pacTotal]
+const camp = id => D.camps[id];
+const partyOk = id => state.party==='all' || camp(id)[1]===state.party;
+const levels = wide => state.level==='all' ? (wide?['congress','statewide','legislature','county']:['congress','legislature','county']) : [state.level];
+
+function campIds(counties, wide){
+  const lv = levels(wide), set = new Set();
+  counties.forEach(c=>D.counties[c].camps.forEach(id=>{ if(lv.includes(camp(id)[3])) set.add(id) }));
+  if(lv.includes('statewide')) D.state.camps.forEach(id=>set.add(id));
+  return [...set].filter(partyOk).sort(desc(id=>camp(id)[4]));
+}
+function items(kind, counties, wide, idx){
+  const lv = kind==='don' ? (state.level==='all'?['statewide','legislature','county','congress']:[state.level]) : levels(wide);
+  const seen = new Set(), out = [];
+  const add = list => (list||[]).forEach(it=>{ const k = JSON.stringify(it); if(!seen.has(k) && partyOk(it[idx])){ seen.add(k); out.push(it) } });
+  lv.forEach(l=>{
+    if(l==='statewide' && kind!=='don') add(D.state[kind].statewide);
+    else counties.forEach(c=>add(D.counties[c][kind][l]));
+  });
+  return out.sort(desc(it=>it[idx+1])).slice(0,6);
+}
+function totals(ids){
+  return {raised:sum(ids,id=>camp(id)[4]),spent:sum(ids,id=>camp(id)[5]),cash:sum(ids,id=>camp(id)[6]),pac:sum(ids,id=>camp(id)[7]),
+    rep:sum(ids.filter(id=>camp(id)[1]==='R'),id=>camp(id)[4]),dem:sum(ids.filter(id=>camp(id)[1]==='D'),id=>camp(id)[4])};
+}
+const chip = p => p==='R'||p==='D' ? `<span class="party ${p}">${p}</span>` : '';
+const who = id => { const c = camp(id); if(!c) return ''; const link = id[0]==='F' ? ` · <a href="https://www.fec.gov/data/candidate/${id.slice(1)}/" target="_blank" rel="noopener">FEC record</a>` : '';
+  return `<a class="cname" href="#c-${id}">${esc(c[0])}</a>${chip(c[1])}<div class="dim">${esc(c[2])}${link}</div>` };
+const cache = {};
+const load = p => cache[p] || (cache[p] = fetch(p).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json() }));
+const bucket = id => { let s = 0; for(const ch of id) s += ch.charCodeAt(0); return s%32 };
+const tiles = (t,key,active) => { const cell = (k,v,l) => key
+    ? `<a class="tile" href="#${active===k?key:key+'--funds-'+k}"${active===k?' aria-current="true"':''}><b>${money(v)}</b><span>${l}</span><i>${active===k?'Listed below · click to close':'Click to list every campaign'}</i></a>`
+    : `<div class="tile"><b>${money(v)}</b><span>${l}</span></div>`;
+  return `<div class="tiles">${cell('raised',t.raised,'Raised')}${cell('spent',t.spent,'Spent')}${cell('cash',t.cash,'Cash on hand')}${cell('pac',t.pac,'From PACs and committees')}</div>` };
+const panel = (title,note,body,more) => `<section class="panel"><header><h2>${title}</h2><small>${note}</small></header>${body}${more?`<a class="more" href="#${more}">View all</a>`:''}</section>`;
+const table = (head,rows,empty) => rows.length ? `<div class="scroll"><table><thead><tr>${head.map(h=>`<th${h[1]?' class="num"':''}>${h[0]}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : `<p class="empty">${empty||'Nothing matches these filters.'}</p>`;
+
+const pacRow = p => `<tr><td>${esc(p[0])}<div class="dim">${day(p[3])}</div></td><td>${who(p[1])}</td><td class="num">${money(p[2])}</td></tr>`;
+const donRow = x => `<tr><td>${esc(x[0])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))} · ${day(x[5])}</div></td><td>${who(x[3])}</td><td class="num">${money(x[4])}</td></tr>`;
+const expRow = x => `<tr><td>${esc(x[0])}<div class="dim">${esc(x[1]||'No purpose filed')} · ${day(x[4])}</div></td><td>${who(x[2])}</td><td class="num">${money(x[3])}</td></tr>`;
+const newsItem = (x,multi) => `<li><span class="tag">${esc(x.s)}${x.scope?(x.scope==='state'?' · Statewide story':' · Regional story'):multi?' · '+x.county+' County':''}</span><a class="hl" href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a><span class="dim">${day(x.d)}</span></li>`;
+const fundRow = (id,max) => { const x = camp(id); return `<tr><td>${who(id)}</td>${max?`<td><div class="bar" title="Raised ${money(x[4])}, spent ${money(x[5])}"><i style="width:${Math.max(0,x[5])/max*100}%"></i><i style="width:${Math.max(0,x[4])/max*100}%"></i></div></td>`:''}<td class="num">${money(x[4])}</td><td class="num">${money(x[5])}</td><td class="num">${money(x[6])}</td>${max?'':`<td class="num">${money(x[7])}</td>`}</tr>` };
+const SECT = {
+  pac:{title:'PAC donations',kind:'pac',idx:1,head:[['From'],['To'],['Amount',1]],row:pacRow},
+  donors:{title:'Donors',kind:'don',idx:3,head:[['Donor'],['To'],['Amount',1]],row:donRow},
+  expenses:{title:'Expenses',kind:'exp',idx:2,head:[['Paid to'],['By'],['Amount',1]],row:expRow}
+};
+const allNews = cs => { const seen = new Set(), multi = cs.length>1;
+  return (D.news ? cs.flatMap(c=>(D.news[c]||[]).map(x=>({...x,county:c}))) : []).filter(x=>!(multi && x.scope) && !(multi && seen.has(x.u)) && seen.add(x.u))
+    .sort((a,b)=>(a.scope?1:0)-(b.scope?1:0) || (b.d||'').localeCompare(a.d||'')) };
+
+const TONE = {frustration:['Frustration','warn'],praise:['Praise','good'],mixed:['Mixed reaction','mix'],news:['In the news','plain']};
+const trendData = a => a.cs.length===1 ? D.trend[a.cs[0]] : {scope:'own',topics:(D.trendArea||{})[a.key]||[]};
+const trendRow = (x,full) => `<li><div class="trow"><b>${esc(x.k)}</b><span class="tone ${TONE[x.tone][1]}">${TONE[x.tone][0]}${x.tone!=='news'&&!x.web?` in ${x.tone==='frustration'?x.neg:x.tone==='praise'?x.pos:x.v} of ${x.n}`:''}</span><span class="dim">${x.web?`Found by web search · ${x.n} ${x.n===1?'source':'sources'} from the past year`:`${x.n} ${x.n===1?'story':'stories'}${x.v?` · ${x.v} showing residents' reactions`:''}`}</span></div><ul class="ev">${x.items.slice(0,full?10:2).map(r=>`<li>${r.say?`<span class="say ${r.tn==='p'?'good':r.tn==='f'?'warn':'mix'}">${esc(r.say)}.</span> `:''}<a href="${esc(r.u)}" target="_blank" rel="noopener">${esc(r.t)}</a> <span class="dim">${esc(r.s)} · ${r.d?day(r.d):'Undated'}</span></li>`).join('')}</ul></li>`;
+function trendPanel(a,full){
+  const T = (D.trend && trendData(a)) || {topics:[]};
+  const note = T.scope==='region' ? 'Too little local coverage here, so this shows the wider region' : 'Resident reactions found by web search, then issues with the most local coverage';
+  return panel('Trending', note, T.topics.length ? `<ul class="trend">${T.topics.slice(0,full?99:4).map(x=>trendRow(x,full)).join('')}</ul>` : `<p class="empty">No issue stood out in the latest pull.</p>`, full||!T.topics.length ? '' : a.key+'--trending');
+}
+function fundsPanel(ids,key){
+  const show = ids.slice(0,12), max = Math.max(1,...show.map(id=>Math.max(camp(id)[4],camp(id)[5])));
+  return panel('Campaign funds', ids.length>12 ? `Top 12 of ${ids.length.toLocaleString('en-US')} by money raised` : 'Raised, spent and cash on hand',
+    table([['Campaign or committee'],['Raised vs. spent'],['Raised',1],['Spent',1],['Cash',1]], show.map(id=>fundRow(id,max))), '');
+}
+const listPanel = (s,note,cs,wide,key) => panel('Top '+SECT[s].title.toLowerCase(), note, table(SECT[s].head, items(SECT[s].kind,cs,wide,SECT[s].idx).map(SECT[s].row)), key+'--'+s);
+function newsPanel(cs,key){
+  const n = allNews(cs).slice(0,6);
+  return panel('Top news', `Local outlet feeds, updated ${pulled()}`,
+    n.length ? `<ul class="news">${n.map(x=>newsItem(x,cs.length>1)).join('')}</ul>` : `<p class="empty">No headlines from the tracked outlets mention this area in the latest pull.</p>`, n.length ? key+'--news' : '');
+}
+const METRIC = {raised:[4,'money raised'],spent:[5,'money spent'],cash:[6,'cash on hand'],pac:[7,'money from PACs and committees']};
+function fundsList(ids,metric){
+  const M = METRIC[metric], sorted = ids.slice().sort(desc(id=>camp(id)[M[0]]||0));
+  return `<section class="panel" id="fundsList"><header><h2>Every campaign and committee</h2><small>${sorted.length.toLocaleString('en-US')} ranked by ${M[1]}${sorted.length>CAP?', top '+CAP+' shown':''}. Click a name for its details.</small></header><div class="tall">${table([['Campaign or committee'],['Raised',1],['Spent',1],['Cash',1],['From PACs',1]], sorted.slice(0,CAP).map(id=>fundRow(id,0)))}</div></section>`;
+}
+const body = (cs,wide,where,key,metric) => { const ids = campIds(cs,wide);
+  return `${tiles(totals(ids),key,metric)}${metric?fundsList(ids,metric):''}${trendPanel(areaOf(key))}<div class="grid2">${newsPanel(cs,key)}${listPanel('pac','Largest single gifts from PACs and committees',cs,wide,key)}</div>${fundsPanel(ids,key)}<div class="grid2">${listPanel('donors','Gifts of $250 or more from people living '+where,cs,wide,key)}${listPanel('expenses','Largest single payments',cs,wide,key)}</div>` };
+const split = t => { const tot = t.rep+t.dem||1; return `<span class="split" title="Republican ${money(t.rep).replace(/<[^>]+>/g,'')}, Democratic ${money(t.dem).replace(/<[^>]+>/g,'')}"><i style="width:${t.rep/tot*100}%"></i><i style="width:${t.dem/tot*100}%"></i></span>` };
+
+function areaOf(key){
+  const county = ALL.find(c=>slug(c)===key);
+  if(county) return {key,name:county+' County',cs:[county],wide:false,where:'in this county',crumb:`<a href="#statewide">Pennsylvania</a> / <a href="#${regionOf(county)}">${REGIONS[regionOf(county)].name}</a> / <a href="#${key}">${county} County</a>`};
+  if(REGIONS[key]) return {key,name:REGIONS[key].name+' Pennsylvania',cs:REGIONS[key].counties,wide:false,where:'in this region',crumb:`<a href="#statewide">Pennsylvania</a> / <a href="#${key}">${REGIONS[key].name}</a>`};
+  return {key:'statewide',name:'Pennsylvania',cs:ALL,wide:true,where:'in Pennsylvania',crumb:`<a href="#statewide">Pennsylvania</a>`};
+}
+function countyView(c,metric){
+  const rk = regionOf(c);
+  const note = state.level==='statewide' ? 'Governor and lieutenant governor totals are statewide. The donor list shows gifts from this county.' : 'Congressional and legislative campaigns appear in every county their district touches. Pick Statewide to see the governor’s race.';
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a> / <a href="#${rk}">${REGIONS[rk].name}</a></p><h1>${c} County</h1><p class="sub">County seat: ${SEATS[c]}. ${note} Click a number box to list every campaign under it, or any name or panel for details.</p></div>` + body([c],false,'in this county',slug(c),metric);
+}
+const countyCards = counties => `<section><h2 style="margin-bottom:10px">Counties</h2><div class="cards">${counties.map(c=>{
+  const ids = campIds([c],false), t = totals(ids), top = ids[0];
+  return `<a class="card" href="#${slug(c)}"><span class="name">${c}<em>${money(t.raised)}</em></span>${split(t)}
+    <span class="dim">${top ? 'Top fundraiser: '+esc(camp(top)[0]) : 'No campaigns match these filters'}</span></a>`}).join('')}</div></section>`;
+function regionView(k,metric){
+  const r = REGIONS[k];
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${r.name} Pennsylvania</h1><p class="sub">${r.counties.length} counties. Totals count each campaign once, even when its district crosses county lines. Click a number box to list every campaign under it, or any name or panel for details.</p></div>` + body(r.counties,false,'in this region',k,metric) + countyCards(r.counties);
+}
+function stateView(metric){
+  const cards = Object.entries(REGIONS).map(([k,r])=>{ const ids = campIds(r.counties,false), t = totals(ids);
+    return `<a class="card" href="#${k}"><span class="name">${r.name}<em>${money(t.raised)}</em></span>${split(t)}<span class="dim">${r.counties.length} counties · ${ids.length.toLocaleString('en-US')} campaigns and committees</span></a>`}).join('');
+  return `<div><h1>Pennsylvania</h1><p class="sub">All 67 counties in five regions. Start with a region, or jump straight to a county. Click a number box to list every campaign under it, or any name or panel for details.</p></div>` + body(ALL,true,'in Pennsylvania','statewide',metric) +
+    `<section><h2 style="margin-bottom:10px">Regions</h2><div class="cards">${cards}</div></section>`;
+}
+
+const head = (a,title,sub) => `<div><p class="crumb">${a.crumb}</p><h1>${title}</h1><p class="sub">${sub}</p></div>`;
+const CAP = 500;
+function listFull(a,s,A){
+  const S = SECT[s], lv = S.kind==='don' ? (state.level==='all'?['statewide','legislature','county','congress']:[state.level]) : levels(a.wide);
+  const rows = lv.flatMap(l=>A[S.kind][l]||[]).filter(it=>camp(it[S.idx]) && partyOk(it[S.idx])).sort(desc(it=>it[S.idx+1]));
+  const note = s==='donors' ? `Gifts of $250 or more from people living ${a.where}.` : s==='pac' ? 'Single gifts from PACs and committees to campaigns tied to this area.' : 'Single payments by campaigns tied to this area.';
+  return head(a,S.title+': '+a.name,`${note} Showing the ${rows.length.toLocaleString('en-US')} largest. The filters above still apply.`) +
+    panel(S.title,'Largest first',table(S.head,rows.map(S.row)));
+}
+function newsFull(a){
+  const n = allNews(a.cs);
+  return head(a,'News: '+a.name,`${n.length} headlines from local outlet feeds, updated ${pulled()}. Each opens on the outlet's site.`) +
+    panel('Headlines','Newest first', n.length ? `<ul class="news">${n.map(x=>newsItem(x,a.cs.length>1)).join('')}</ul>` : `<p class="empty">No headlines for this area in the latest pull.</p>`);
+}
+function campFull(id,det){
+  const c = camp(id), tied = ALL.filter(cn=>D.counties[cn].camps.includes(id));
+  const where = c[3]==='statewide' ? 'Statewide race' : tied.length ? 'Counties: '+tied.map(cn=>`<a href="#${slug(cn)}">${cn}</a>`).join(', ') : 'No Pennsylvania county on file';
+  const fec = id[0]==='F' ? ` · <a href="https://www.fec.gov/data/candidate/${id.slice(1)}/" target="_blank" rel="noopener">FEC record</a>` : '';
+  const src = id[0]==='F' ? `FEC reports through ${day(D.meta.fed_asof)}` : `Department of State reports through ${day(D.meta.state_through)}`;
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${esc(c[0])}${chip(c[1])}</h1><p class="sub">${esc(c[2])}${fec}. ${where}. ${src}.</p></div>` +
+    tiles({raised:c[4],spent:c[5],cash:c[6],pac:c[7]}) +
+    `<div class="grid2">${panel('PAC donations received',`${det.pac.length} largest`,table([['From'],['Date'],['Amount',1]],det.pac.map(p=>`<tr><td>${esc(p[0])}</td><td class="dim">${day(p[2])}</td><td class="num">${money(p[1])}</td></tr>`),'No itemized PAC or committee gifts on file.'))}
+    ${panel('Donors',`${det.don.length} largest${id[0]==='F'?', gifts totaled per person':', gifts of $250 or more'}`,table([['Donor'],['Date'],['Amount',1]],det.don.map(x=>`<tr><td>${esc(x[0])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))}</div></td><td class="dim">${day(x[4])}</td><td class="num">${money(x[3])}</td></tr>`),'No itemized individual gifts on file.'))}</div>` +
+    panel('Expenses',`${det.exp.length} largest payments`,table([['Paid to'],['Purpose'],['Date'],['Amount',1]],det.exp.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1]||'No purpose filed')}</td><td class="dim">${day(x[3])}</td><td class="num">${money(x[2])}</td></tr>`),'No itemized expenses on file.'));
+}
+
+let token = 0;
+function route(){
+  if(!D) return;
+  const h = location.hash.replace('#','') || 'statewide', view = document.getElementById('view'), mine = ++token;
+  const later = (p,render) => { view.innerHTML = '<p class="empty">Loading details…</p>'; p.then(x=>{ if(mine===token) view.innerHTML = render(x) }).catch(()=>{ if(mine===token) view.innerHTML = '<p class="empty">Those details did not load. Reload the page to try again.</p>' }) };
+  let active = 'statewide', county = '';
+  if(h.startsWith('c-') && camp(h.slice(2))){
+    const id = h.slice(2); later(load('site/camp/'+bucket(id)+'.json'), f=>campFull(id, f[id]||{pac:[],exp:[],don:[]}));
+    active = '';
+  } else {
+    const [key,sect] = h.split('--'), a = areaOf(key);
+    county = a.cs.length===1 ? a.cs[0] : ''; active = county ? regionOf(county) : a.key;
+    const metric = sect && sect.startsWith('funds-') && METRIC[sect.slice(6)] ? sect.slice(6) : '';
+    if(SECT[sect]) later(load('site/area/'+a.key+'.json'), A=>listFull(a,sect,A));
+    else if(sect==='news') view.innerHTML = newsFull(a);
+    else if(sect==='trending') view.innerHTML = head(a,'Trending: '+a.name,'Issues are ranked by how many local stories and opinion pieces mention them. A Frustration, Praise or Mixed reaction tag appears only where a story or letter shows residents reacting, and each of those was read individually. Everything else is tagged In the news. Entries marked Found by web search come from a search for residents’ reactions and can be several months old; check the date on each. This is not a poll.') + trendPanel(a,true);
+    else view.innerHTML = county ? countyView(county,metric) : REGIONS[a.key] ? regionView(a.key,metric) : stateView(metric);
+  }
+  document.querySelectorAll('#regionNav a').forEach(x=>x.getAttribute('href')==='#'+active?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
+  document.getElementById('countyPick').value = county;
+  if((h.includes('--') && !h.includes('--funds-')) || h.startsWith('c-')) scrollTo(0,0);
+}
+function chips(id,list,key){
+  const el = document.getElementById(id);
+  list.forEach(([v,label])=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='chip'; b.textContent=label; b.setAttribute('aria-pressed', String(state[key]===v));
+    b.onclick = () => {state[key]=v; el.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); route()};
+    el.appendChild(b);
+  });
+}
+document.getElementById('regionNav').innerHTML = `<a href="#statewide">Statewide <small>67</small></a>` +
+  Object.entries(REGIONS).map(([k,r])=>`<a href="#${k}">${r.name} <small>${r.counties.length}</small></a>`).join('');
+chips('levelChips',LEVELS,'level'); chips('partyChips',PARTIES,'party');
+const pickEl = document.getElementById('countyPick');
+pickEl.innerHTML = `<option value="">Choose a county</option>` + Object.entries(REGIONS).map(([k,r])=>`<optgroup label="${r.name}">${r.counties.map(c=>`<option>${c}</option>`).join('')}</optgroup>`).join('');
+pickEl.onchange = () => { if(pickEl.value) location.hash = slug(pickEl.value) };
+const dlg = document.getElementById('accessDlg');
+document.getElementById('accessBtn').onclick = () => { document.getElementById('dlgNote').textContent='This form is not connected yet. Nothing is sent or stored.'; dlg.showModal() };
+document.getElementById('dlgClose').onclick = () => dlg.close();
+document.getElementById('accessForm').onsubmit = e => { e.preventDefault(); document.getElementById('dlgNote').textContent='Not sent. Sign-ups still need to be connected.' };
+addEventListener('hashchange', route);
+document.getElementById('view').innerHTML = '<p class="empty">Loading filings…</p>';
+fetch('site/data.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json() }).then(d=>{
+  D = d;
+  document.getElementById('asof').textContent = 'Real filings · federal through '+day(d.meta.fed_asof)+' · state through '+day(d.meta.state_through);
+  route();
+}).catch(()=>{ document.getElementById('view').innerHTML = '<p class="empty">The filings file did not load. Reload the page to try again.</p>' });
+</script>
+</body>
+</html>
