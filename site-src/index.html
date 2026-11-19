@@ -260,11 +260,68 @@ const tiles = (t,key,active) => { const cell = (k,v,l) => key
 const panel = (title,note,body,more) => `<section class="panel"><header><h2>${title}</h2><small>${note}</small></header>${body}${more?`<a class="more" href="#${more}">View all</a>`:''}</section>`;
 const table = (head,rows,empty) => rows.length ? `<div class="scroll"><table><thead><tr>${head.map(h=>`<th${h[1]?' class="num"':''}>${h[0]}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : `<p class="empty">${empty||'Nothing matches these filters.'}</p>`;
 
-const pacRow = p => `<tr><td>${esc(p[0])}<div class="dim">${day(p[3])}</div></td><td>${who(p[1])}</td><td class="num">${money(p[2])}</td></tr>`;
-const donRow = x => `<tr><td>${esc(x[0])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))} · ${day(x[5])}</div></td><td>${who(x[3])}</td><td class="num">${money(x[4])}</td></tr>`;
+const pacRow = p => `<tr><td>${pacLink(p[0])}<div class="dim">${day(p[3])}</div></td><td>${who(p[1])}</td><td class="num">${money(p[2])}</td></tr>`;
+const donRow = x => `<tr><td>${donLink(x[0],x[1])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))} · ${day(x[5])}</div></td><td>${who(x[3])}</td><td class="num">${money(x[4])}</td></tr>`;
 const expRow = x => `<tr><td>${esc(x[0])}<div class="dim">${esc(x[1]||'No purpose filed')} · ${day(x[4])}</div></td><td>${who(x[2])}</td><td class="num">${money(x[3])}</td></tr>`;
 const newsItem = (x,multi) => `<li><span class="tag">${esc(x.s)}${x.scope?(x.scope==='state'?' · Statewide story':' · Regional story'):multi?' · '+x.county+' County':''}</span><a class="hl" href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a><span class="dim">${day(x.d)}</span></li>`;
 const fundRow = (id,max) => { const x = camp(id); return `<tr><td>${who(id)}</td>${max?`<td><div class="bar" title="Raised ${money(x[4])}, spent ${money(x[5])}"><i style="width:${Math.max(0,x[5])/max*100}%"></i><i style="width:${Math.max(0,x[4])/max*100}%"></i></div></td>`:''}<td class="num">${money(x[4])}</td><td class="num">${money(x[5])}</td><td class="num">${money(x[6])}</td>${max?'':`<td class="num">${money(x[7])}</td>`}</tr>` };
+const sl = s => String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+const bk = (k,n) => { let t = 0; for(const ch of k) t += ch.charCodeAt(0); return t%n };
+const pacLink = n => `<a class="cname" href="#p-${sl(n)}">${esc(n)}</a>`;
+const donLink = (n,city) => `<a class="cname" href="#i-${sl(n)}--${sl(String(city||'').split(',')[0])}">${esc(n)}</a>`;
+const USE = 'From public campaign finance filings. Federal law bars using individual contributor information to solicit contributions or for commercial purposes.';
+const missing = what => `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>Nothing on file</h1><p class="sub">There is no ${what} page for this link.</p></div>`;
+const giftTable = g => table([['To'],['Date'],['Amount',1]], g.filter(x=>camp(x[0])).map(x=>`<tr><td>${who(x[0])}</td><td class="dim">${day(x[2])}</td><td class="num">${money(x[1])}</td></tr>`), 'No gifts on file.');
+function pacFull(key,p){
+  if(!p) return missing('committee');
+  const src = p.asrc==='fec' ? 'As registered with the FEC' : p.asrc==='own' ? 'Address from the committee’s own Department of State report' : p.asrc==='given' ? 'Address as reported by the campaigns it gave to' : 'No address on file';
+  const facts = [p.a&&p.a.length ? ['Address', p.a.map(esc).join('<br>')] : null, p.t ? ['Treasurer', esc(p.t)] : null, p.org ? ['Connected organization', esc(p.org)] : null,
+    p.fec ? ['FEC record', `<a href="https://www.fec.gov/data/committee/${esc(p.fec)}/" target="_blank" rel="noopener">${esc(p.fec)}</a>`] : null,
+    p.id && camp(p.id) ? ['Its own filings', `<a href="#c-${p.id}">What this committee raised and spent</a>`] : null].filter(Boolean);
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${esc(p.n)}</h1><p class="sub">PAC or political committee. Gave ${money(p.tot)} in ${p.cnt.toLocaleString('en-US')} gift${p.cnt===1?'':'s'} to the campaigns and committees tracked here.</p></div>` +
+    `<div class="grid2">${panel('Committee details', src, table([['Item'],['On file']], facts.map(f=>`<tr><td class="dim">${f[0]}</td><td>${f[1]}</td></tr>`), 'No address or treasurer is on file for this committee.'))}
+    ${panel('Gifts made', p.cnt>p.g.length ? `${p.g.length} largest of ${p.cnt.toLocaleString('en-US')}` : 'Largest first', giftTable(p.g))}</div>`;
+}
+function donorFull(key,p){
+  if(!p) return missing('donor');
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${esc(p.n)}</h1><p class="sub">${esc([p.c,p.o].filter(Boolean).join(' · '))}${p.c||p.o?'. ':''}Gave ${money(p.tot)} in ${p.cnt.toLocaleString('en-US')} gift${p.cnt===1?'':'s'} to the campaigns and committees tracked here.</p></div>` +
+    panel('Giving history', p.cnt>p.g.length ? `${p.g.length} largest of ${p.cnt.toLocaleString('en-US')}` : 'Largest first', giftTable(p.g)) +
+    `<p class="dim">People with the same name in the same city are shown together. Gifts to congressional campaigns are totaled per campaign. ${USE}</p>`;
+}
+const distOf = id => { const c = camp(id); return c && (c[3]==='congress' || c[3]==='legislature') ? c[2].replace(' (incumbent)','') : '' };
+const distOrder = d => (d.startsWith('U.S.') ? 0 : d.startsWith('State Senate') ? 1000 : 2000) + (+(d.match(/(\d+)$/)||[0,0])[1]);
+function distPanel(c){
+  const m = new Map();
+  D.counties[c].camps.forEach(id=>{ const d = distOf(id); if(d){ if(!m.has(d)) m.set(d,[]); m.get(d).push(id) } });
+  const rows = [...m.keys()].sort((a,b)=>distOrder(a)-distOrder(b)).map(d=>{ const ids = m.get(d).filter(partyOk).sort(desc(id=>camp(id)[4])), t = totals(ids);
+    return `<tr><td><a class="cname" href="#d-${sl(d)}">${esc(d)}</a><div class="dim">${ids.slice(0,3).map(id=>esc(camp(id)[0])+chip(camp(id)[1])).join(' ') || 'No campaigns match the party filter'}</div></td><td class="num">${ids.length}</td><td class="num">${money(t.raised)}</td><td class="num">${money(t.spent)}</td></tr>` });
+  return panel('Legislative districts', `${rows.length} congressional and state legislative districts touch this county. Click one for every campaign in it.`, rows.length>8 ? `<div class="tall">${table([['District'],['Campaigns',1],['Raised',1],['Spent',1]],rows)}</div>` : table([['District'],['Campaigns',1],['Raised',1],['Spent',1]],rows,'No district campaigns on file.'));
+}
+function distView(key){
+  const ids = Object.keys(D.camps).filter(id=>sl(distOf(id))===key).sort(desc(id=>camp(id)[4]));
+  if(!ids.length) return missing('district');
+  const cos = ALL.filter(cn=>D.counties[cn].camps.some(id=>ids.includes(id)));
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${esc(distOf(ids[0]))}</h1><p class="sub">${cos.length ? 'Counties: '+cos.map(cn=>`<a href="#${slug(cn)}">${cn}</a>`).join(', ')+'. ' : ''}${ids.length} campaign${ids.length===1?'':'s'} that reported raising or spending money.</p></div>` +
+    tiles(totals(ids)) + panel('Campaigns','Ranked by money raised',table([['Campaign'],['Raised',1],['Spent',1],['Cash',1],['From PACs',1]], ids.map(id=>fundRow(id,0))));
+}
+const TYPE = {township:'Township',borough:'Borough',city:'City',town:'Town',municipality:'Municipality'};
+function muniPanel(c){
+  const L = (D.munis||{})[c]; if(!L || !L.length) return '';
+  const news = (D.mnews||{})[c] || {};
+  const rows = L.map(m=>({m, n:(news[m[0]]||[]).length})).sort((a,b)=>(b.m[4]-a.m[4]) || (b.n-a.n) || a.m[1].localeCompare(b.m[1]));
+  const body = table([['Township, borough or city'],['Stories',1],['Donors',1],['Given',1]], rows.map(({m,n})=>`<tr><td><a class="cname" href="#m-${sl(c)}--${m[0]}">${esc(m[1])}</a> <span class="dim">${TYPE[m[2]]||m[2]}</span>${m[5]?' <span class="tag">Local committee</span>':''}</td><td class="num">${n||'<span class="dim">0</span>'}</td><td class="num">${m[3]||'<span class="dim">0</span>'}</td><td class="num">${m[4]?money(m[4]):'<span class="dim">$0</span>'}</td></tr>`));
+  return panel('Townships and boroughs', `${L.length} municipalities, most giving first. Donors are placed by the mailing city on their gift, which can be a neighbouring town.`, `<div class="tall">${body}</div>`);
+}
+function muniFull(c,mk,x){
+  const m = ((D.munis||{})[c]||[]).find(r=>r[0]===mk); if(!m) return missing('township or borough');
+  x = x || {don:[],nd:0,tot:0,cm:[]};
+  const news = ((D.mnews||{})[c]||{})[mk] || [], rk = regionOf(c), cm = (x.cm||[]).filter(camp);
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a> / <a href="#${rk}">${REGIONS[rk].name}</a> / <a href="#${slug(c)}">${c} County</a></p><h1>${esc(m[1])} ${TYPE[m[2]]||''}</h1><p class="sub">${TYPE[m[2]]||'Municipality'} in ${c} County. ${x.nd ? `${x.nd.toLocaleString('en-US')} donor${x.nd===1?'':'s'} with this mailing city gave ${money(x.tot)} in gifts of $250 or more.` : 'No gifts of $250 or more list this mailing city.'}</p></div>` +
+    `<div class="grid2">${panel('News', `Stories from the last 10 days that name this ${m[2]}`, news.length ? `<ul class="news">${news.map(n=>newsItem(n,false)).join('')}</ul>` : `<p class="empty">No recent story from the tracked outlets names this ${m[2]}.</p>`)}
+    ${panel('Local committees', 'Committees named for this place that file with the Department of State', table([['Committee'],['Raised',1],['Spent',1],['Cash',1],['From PACs',1]], cm.map(id=>fundRow(id,0)), 'No committee named for this place files with the Department of State.'))}</div>` +
+    panel('Donors', x.don.length ? `${x.don.length} largest gifts` : 'Gifts of $250 or more', table([['Donor'],['To'],['Amount',1]], x.don.filter(d=>camp(d[2])).map(d=>`<tr><td>${donLink(d[0],d[5]||m[1])}<div class="dim">${esc([d[1],day(d[4])].filter(Boolean).join(' · '))}</div></td><td>${who(d[2])}</td><td class="num">${money(d[3])}</td></tr>`), 'No itemized gifts on file.')) +
+    `<p class="dim">News is matched by place name, so a few stories will be about something else with the same name. ${USE}</p>`;
+}
 const PARTY_RX = /republican|\bgop\b|democrat/i;
 const partyOf = n => /republican|\bgop\b/i.test(n) ? 'R' : /democrat/i.test(n) ? 'D' : '';
 function partyPanel(cs,where){
@@ -318,7 +375,7 @@ function fundsList(ids,metric){
   return `<section class="panel" id="fundsList"><header><h2>Every campaign and committee</h2><small>${sorted.length.toLocaleString('en-US')} ranked by ${M[1]}${sorted.length>CAP?', top '+CAP+' shown':''}. Click a name for its details.</small></header><div class="tall">${table([['Campaign or committee'],['Raised',1],['Spent',1],['Cash',1],['From PACs',1]], sorted.slice(0,CAP).map(id=>fundRow(id,0)))}</div></section>`;
 }
 const body = (cs,wide,where,key,metric) => { const ids = campIds(cs,wide);
-  return `${tiles(totals(ids),key,metric)}${metric?fundsList(ids,metric):''}${trendPanel(areaOf(key))}<div class="grid2">${newsPanel(cs,key)}${listPanel('pac','Largest single gifts from PACs and committees',cs,wide,key)}</div>${fundsPanel(ids,key)}${partyPanel(cs,where)}<div class="grid2">${listPanel('donors','Gifts of $250 or more from people living '+where,cs,wide,key)}${listPanel('expenses','Largest single payments',cs,wide,key)}</div>` };
+  return `${tiles(totals(ids),key,metric)}${metric?fundsList(ids,metric):''}${trendPanel(areaOf(key))}<div class="grid2">${newsPanel(cs,key)}${listPanel('pac','Largest single gifts from PACs and committees',cs,wide,key)}</div>${fundsPanel(ids,key)}${partyPanel(cs,where)}${cs.length===1 ? distPanel(cs[0])+muniPanel(cs[0]) : ''}<div class="grid2">${listPanel('donors','Gifts of $250 or more from people living '+where,cs,wide,key)}${listPanel('expenses','Largest single payments',cs,wide,key)}</div>` };
 const split = t => { const tot = t.rep+t.dem||1; return `<span class="split" title="Republican ${money(t.rep).replace(/<[^>]+>/g,'')}, Democratic ${money(t.dem).replace(/<[^>]+>/g,'')}"><i style="width:${t.rep/tot*100}%"></i><i style="width:${t.dem/tot*100}%"></i></span>` };
 
 function areaOf(key){
@@ -368,8 +425,8 @@ function campFull(id,det){
   const src = id[0]==='F' ? `FEC reports through ${day(D.meta.fed_asof)}` : `Department of State reports through ${day(D.meta.state_through)}`;
   return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${esc(c[0])}${chip(c[1])}</h1><p class="sub">${esc(c[2])}${fec}. ${where}. ${src}.</p></div>` +
     tiles({raised:c[4],spent:c[5],cash:c[6],pac:c[7]}) +
-    `<div class="grid2">${panel('PAC donations received',`${det.pac.length} largest`,table([['From'],['Date'],['Amount',1]],det.pac.map(p=>`<tr><td>${esc(p[0])}</td><td class="dim">${day(p[2])}</td><td class="num">${money(p[1])}</td></tr>`),'No itemized PAC or committee gifts on file.'))}
-    ${panel('Donors',`${det.don.length} largest${id[0]==='F'?', gifts totaled per person':', gifts of $250 or more'}`,table([['Donor'],['Date'],['Amount',1]],det.don.map(x=>`<tr><td>${esc(x[0])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))}</div></td><td class="dim">${day(x[4])}</td><td class="num">${money(x[3])}</td></tr>`),'No itemized individual gifts on file.'))}</div>` +
+    `<div class="grid2">${panel('PAC donations received',`${det.pac.length} largest`,table([['From'],['Date'],['Amount',1]],det.pac.map(p=>`<tr><td>${pacLink(p[0])}</td><td class="dim">${day(p[2])}</td><td class="num">${money(p[1])}</td></tr>`),'No itemized PAC or committee gifts on file.'))}
+    ${panel('Donors',`${det.don.length} largest${id[0]==='F'?', gifts totaled per person':', gifts of $250 or more'}`,table([['Donor'],['Date'],['Amount',1]],det.don.map(x=>`<tr><td>${donLink(x[0],x[1])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))}</div></td><td class="dim">${day(x[4])}</td><td class="num">${money(x[3])}</td></tr>`),'No itemized individual gifts on file.'))}</div>` +
     purposePanel(det,c) + panel('Expenses',`${det.exp.length} largest payments`,table([['Paid to'],['Purpose'],['Date'],['Amount',1]],det.exp.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1]||'No purpose filed')}</td><td class="dim">${day(x[3])}</td><td class="num">${money(x[2])}</td></tr>`),'No itemized expenses on file.'));
 }
 
@@ -382,6 +439,16 @@ function route(){
   if(h.startsWith('c-') && camp(h.slice(2))){
     const id = h.slice(2); later(load('site/camp/'+bucket(id)+'.json'), f=>campFull(id, f[id]||{pac:[],exp:[],don:[]}));
     active = '';
+  } else if(h.startsWith('p-')){
+    const k = h.slice(2); later(load('site/pac/'+bk(k,32)+'.json'), f=>pacFull(k, f[k])); active = '';
+  } else if(h.startsWith('i-')){
+    const k = h.slice(2); later(load('site/donor/'+bk(k,128)+'.json'), f=>donorFull(k, f[k])); active = '';
+  } else if(h.startsWith('d-')){
+    view.innerHTML = distView(h.slice(2)); active = '';
+  } else if(h.startsWith('m-')){
+    const [ck,mk] = h.slice(2).split('--'), c = ALL.find(x=>sl(x)===ck);
+    if(c){ county = c; active = regionOf(c); later(load('site/muni/county-'+c.toLowerCase()+'.json'), M=>muniFull(c, mk, M[mk])) }
+    else { view.innerHTML = missing('township or borough'); active = '' }
   } else {
     const [key,sect] = h.split('--'), a = areaOf(key);
     county = a.cs.length===1 ? a.cs[0] : ''; active = county ? regionOf(county) : a.key;
@@ -393,7 +460,7 @@ function route(){
   }
   document.querySelectorAll('#regionNav a').forEach(x=>x.getAttribute('href')==='#'+active?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
   document.getElementById('countyPick').value = county;
-  if((h.includes('--') && !h.includes('--funds-')) || h.startsWith('c-')) scrollTo(0,0);
+  if((h.includes('--') && !h.includes('--funds-')) || /^[cpidm]-/.test(h)) scrollTo(0,0);
 }
 function chips(id,list,key){
   const el = document.getElementById(id);

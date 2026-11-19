@@ -99,3 +99,5 @@ print('tones',collections.Counter(x['tone'] for c in COUNTIES for x in own[c]))
 for c in('Lancaster','Erie','Lawrence','Cumberland','Forest'):
     print(c,trend[c]['scope'],[(x['k'],x['tone'],x['n'],x['v']) for x in trend[c]['topics']])
 print([(c,x['k'],x['tone'],r['t'][:80]) for c in COUNTIES for x in own[c] if x['tone'] in('frustration','praise') for r in x['items'][:1] if r.get('v')][:14])
+
+import muni_news; muni_news.build(N, counties_for)
