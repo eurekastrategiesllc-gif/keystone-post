@@ -265,6 +265,25 @@ const donRow = x => `<tr><td>${esc(x[0])}<div class="dim">${esc([x[1],x[2]].filt
 const expRow = x => `<tr><td>${esc(x[0])}<div class="dim">${esc(x[1]||'No purpose filed')} · ${day(x[4])}</div></td><td>${who(x[2])}</td><td class="num">${money(x[3])}</td></tr>`;
 const newsItem = (x,multi) => `<li><span class="tag">${esc(x.s)}${x.scope?(x.scope==='state'?' · Statewide story':' · Regional story'):multi?' · '+x.county+' County':''}</span><a class="hl" href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a><span class="dim">${day(x.d)}</span></li>`;
 const fundRow = (id,max) => { const x = camp(id); return `<tr><td>${who(id)}</td>${max?`<td><div class="bar" title="Raised ${money(x[4])}, spent ${money(x[5])}"><i style="width:${Math.max(0,x[5])/max*100}%"></i><i style="width:${Math.max(0,x[4])/max*100}%"></i></div></td>`:''}<td class="num">${money(x[4])}</td><td class="num">${money(x[5])}</td><td class="num">${money(x[6])}</td>${max?'':`<td class="num">${money(x[7])}</td>`}</tr>` };
+const PARTY_RX = /republican|\bgop\b|democrat/i;
+const partyOf = n => /republican|\bgop\b/i.test(n) ? 'R' : /democrat/i.test(n) ? 'D' : '';
+function partyPanel(cs,where){
+  const set = new Set();
+  cs.forEach(c=>D.counties[c].camps.forEach(id=>{ const x = camp(id); if(x[3]==='county' && PARTY_RX.test(x[0])) set.add(id) }));
+  const ids = [...set].filter(id=>state.party==='all' || partyOf(camp(id)[0])===state.party).sort(desc(id=>camp(id)[4]));
+  const row = id => { const x = camp(id); return `<tr><td><a class="cname" href="#c-${id}">${esc(x[0])}</a>${chip(partyOf(x[0]))}</td><td class="num">${money(x[4])}</td><td class="num">${money(x[5])}</td><td class="num">${money(x[6])}</td></tr>` };
+  const body = table([['Committee'],['Raised',1],['Spent',1],['Cash on hand',1]], ids.map(row), `No Republican or Democratic party committee based ${where} files with the Department of State${state.party==='all'?'':' for this party'}. County and local party committees often file only with their county election office.`);
+  return panel('Party committees', ids.length ? `${ids.length} that file with the Department of State. Click a name to see what it spent money on.` : 'County and local party committees', ids.length>8 ? `<div class="tall">${body}</div>` : body);
+}
+function purposePanel(det,c){
+  if(!det.exp.length) return '';
+  const g = {}; det.exp.forEach(x=>{ const n = (x[1]||'No purpose filed').trim().replace(/\s+/g,' '), k = n.toLowerCase(); (g[k] = g[k] || {n, v:0, c:0}); g[k].v += x[2]; g[k].c++ });
+  const all = Object.values(g).sort((a,b)=>b.v-a.v), tot = det.exp.reduce((t,x)=>t+x[2],0) || 1, top = all.slice(0,8), rest = all.slice(8);
+  if(rest.length) top.push({n:`${rest.length} other purposes`, v:rest.reduce((t,r)=>t+r.v,0), c:rest.reduce((t,r)=>t+r.c,0)});
+  const cover = c[5]>0 ? Math.min(100,Math.round(tot/c[5]*100)) : 0;
+  return panel('What the money was spent on', `Grouped by the purpose filed, from the ${det.exp.length} largest payments${cover ? `, about ${cover}% of all spending` : ''}`,
+    table([['Purpose'],['Payments',1],['Amount',1],['Share',1]], top.map(r=>`<tr><td>${esc(r.n)}</td><td class="num">${r.c}</td><td class="num">${money(r.v)}</td><td class="num">${Math.round(r.v/tot*100)}%</td></tr>`)));
+}
 const SECT = {
   pac:{title:'PAC donations',kind:'pac',idx:1,head:[['From'],['To'],['Amount',1]],row:pacRow},
   donors:{title:'Donors',kind:'don',idx:3,head:[['Donor'],['To'],['Amount',1]],row:donRow},
@@ -299,7 +318,7 @@ function fundsList(ids,metric){
   return `<section class="panel" id="fundsList"><header><h2>Every campaign and committee</h2><small>${sorted.length.toLocaleString('en-US')} ranked by ${M[1]}${sorted.length>CAP?', top '+CAP+' shown':''}. Click a name for its details.</small></header><div class="tall">${table([['Campaign or committee'],['Raised',1],['Spent',1],['Cash',1],['From PACs',1]], sorted.slice(0,CAP).map(id=>fundRow(id,0)))}</div></section>`;
 }
 const body = (cs,wide,where,key,metric) => { const ids = campIds(cs,wide);
-  return `${tiles(totals(ids),key,metric)}${metric?fundsList(ids,metric):''}${trendPanel(areaOf(key))}<div class="grid2">${newsPanel(cs,key)}${listPanel('pac','Largest single gifts from PACs and committees',cs,wide,key)}</div>${fundsPanel(ids,key)}<div class="grid2">${listPanel('donors','Gifts of $250 or more from people living '+where,cs,wide,key)}${listPanel('expenses','Largest single payments',cs,wide,key)}</div>` };
+  return `${tiles(totals(ids),key,metric)}${metric?fundsList(ids,metric):''}${trendPanel(areaOf(key))}<div class="grid2">${newsPanel(cs,key)}${listPanel('pac','Largest single gifts from PACs and committees',cs,wide,key)}</div>${fundsPanel(ids,key)}${partyPanel(cs,where)}<div class="grid2">${listPanel('donors','Gifts of $250 or more from people living '+where,cs,wide,key)}${listPanel('expenses','Largest single payments',cs,wide,key)}</div>` };
 const split = t => { const tot = t.rep+t.dem||1; return `<span class="split" title="Republican ${money(t.rep).replace(/<[^>]+>/g,'')}, Democratic ${money(t.dem).replace(/<[^>]+>/g,'')}"><i style="width:${t.rep/tot*100}%"></i><i style="width:${t.dem/tot*100}%"></i></span>` };
 
 function areaOf(key){
@@ -351,7 +370,7 @@ function campFull(id,det){
     tiles({raised:c[4],spent:c[5],cash:c[6],pac:c[7]}) +
     `<div class="grid2">${panel('PAC donations received',`${det.pac.length} largest`,table([['From'],['Date'],['Amount',1]],det.pac.map(p=>`<tr><td>${esc(p[0])}</td><td class="dim">${day(p[2])}</td><td class="num">${money(p[1])}</td></tr>`),'No itemized PAC or committee gifts on file.'))}
     ${panel('Donors',`${det.don.length} largest${id[0]==='F'?', gifts totaled per person':', gifts of $250 or more'}`,table([['Donor'],['Date'],['Amount',1]],det.don.map(x=>`<tr><td>${esc(x[0])}<div class="dim">${esc([x[1],x[2]].filter(Boolean).join(' · '))}</div></td><td class="dim">${day(x[4])}</td><td class="num">${money(x[3])}</td></tr>`),'No itemized individual gifts on file.'))}</div>` +
-    panel('Expenses',`${det.exp.length} largest payments`,table([['Paid to'],['Purpose'],['Date'],['Amount',1]],det.exp.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1]||'No purpose filed')}</td><td class="dim">${day(x[3])}</td><td class="num">${money(x[2])}</td></tr>`),'No itemized expenses on file.'));
+    purposePanel(det,c) + panel('Expenses',`${det.exp.length} largest payments`,table([['Paid to'],['Purpose'],['Date'],['Amount',1]],det.exp.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1]||'No purpose filed')}</td><td class="dim">${day(x[3])}</td><td class="num">${money(x[2])}</td></tr>`),'No itemized expenses on file.'));
 }
 
 let token = 0;
