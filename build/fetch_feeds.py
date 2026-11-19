@@ -5,7 +5,7 @@ news.py and trend.py already read: {"<host>": [[title, link, pubDate, descriptio
 (opinion feeds use the key "<host>#op"). New rows are merged into the store by
 link, so a host that fails on one run keeps its earlier stories.
 """
-import json, os, re, sys, gzip, html, datetime, email.utils, urllib.request, concurrent.futures
+import json, os, re, sys, gzip, html, time, datetime, email.utils, urllib.request, urllib.error, concurrent.futures
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FEEDS = os.path.join(HERE, '..', 'raw', 'feeds')
@@ -52,22 +52,41 @@ def parse(x):
 def pull(f):
     url = f.get('feed') or f.get('feed_guess')
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': 'application/rss+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.8', 'Accept-Language': 'en-US,en;q=0.9', 'Accept-Encoding': 'gzip'})
-    try:
-        with urllib.request.urlopen(req, timeout=25) as r:
-            b = r.read(8_000_000)
-            if r.headers.get('Content-Encoding') == 'gzip' or b[:2] == b'\x1f\x8b': b = gzip.decompress(b)
-        rows = parse(b.decode('utf-8', 'replace'))
-        return f, rows, '' if rows else 'no items in response'
-    except Exception as e:
-        return f, [], ('%s %s' % (type(e).__name__, e))[:120]
+    err = ''
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=25) as r:
+                b = r.read(8_000_000)
+                if r.headers.get('Content-Encoding') == 'gzip' or b[:2] == b'\x1f\x8b': b = gzip.decompress(b)
+            rows = parse(b.decode('utf-8', 'replace'))
+            return f, rows, '' if rows else 'no items in response'
+        except urllib.error.HTTPError as e:
+            err = 'HTTP %s' % e.code
+            if e.code not in (429, 503) or attempt == 2: break
+            try: wait = min(int(e.headers.get('Retry-After', '')), 30)
+            except ValueError: wait = 8 * (attempt + 1)
+            time.sleep(wait)
+        except Exception as e:
+            err = ('%s %s' % (type(e).__name__, e))[:120]; break
+    return f, [], err
+
+def pull_slowly(group):
+    # Sites on one shared platform answer 429 when asked in parallel, so ask them one at a time.
+    out = []
+    for f in group:
+        out.append(pull(f)); time.sleep(2)
+    return out
 
 def main():
     feeds = json.load(open(os.path.join(HERE, 'feeds.json'), encoding='utf-8'))
     paths = {'news': os.path.join(FEEDS, 'ksnews_store.json'), 'opinion': os.path.join(FEEDS, 'ksop_store.json')}
     store = {k: (json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}) for k, p in paths.items()}
     status = {}
+    shared = [f for f in feeds if f.get('cms') == 'townnews']
+    rest = [f for f in feeds if f.get('cms') != 'townnews']
     with concurrent.futures.ThreadPoolExecutor(8) as ex:
-        results = list(ex.map(pull, feeds))
+        slow = ex.submit(pull_slowly, shared)
+        results = list(ex.map(pull, rest)) + slow.result()
     for f, rows, err in results:
         kind = f['kind']; key = f['host'] + ('#op' if kind == 'opinion' else '')
         old = store[kind].get(key, []); have = {r[1] for r in old}
