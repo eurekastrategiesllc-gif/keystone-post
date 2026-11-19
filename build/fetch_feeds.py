@@ -82,8 +82,9 @@ def main():
     paths = {'news': os.path.join(FEEDS, 'ksnews_store.json'), 'opinion': os.path.join(FEEDS, 'ksop_store.json')}
     store = {k: (json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}) for k, p in paths.items()}
     status = {}
-    shared = [f for f in feeds if f.get('cms') == 'townnews']
-    rest = [f for f in feeds if f.get('cms') != 'townnews']
+    is_shared = lambda f: f.get('cms') == 'townnews' or '/search/?f=rss' in (f.get('feed') or f.get('feed_guess') or '')
+    shared = [f for f in feeds if is_shared(f)]
+    rest = [f for f in feeds if not is_shared(f)]
     with concurrent.futures.ThreadPoolExecutor(8) as ex:
         slow = ex.submit(pull_slowly, shared)
         results = list(ex.map(pull, rest)) + slow.result()
