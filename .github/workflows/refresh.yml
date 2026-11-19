@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 15
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url || steps.deploy2.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -82,8 +82,22 @@ jobs:
         with:
           path: _site
 
+      # The upload is sometimes not visible to the deploy step for a few seconds, so wait and retry once.
+      - name: Wait for the upload to register
+        if: steps.check.outcome == 'success'
+        run: sleep 15
+
       - id: deploy
         if: steps.check.outcome == 'success'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: Wait before retrying the publish
+        if: steps.check.outcome == 'success' && steps.deploy.outcome == 'failure'
+        run: sleep 45
+
+      - id: deploy2
+        if: steps.check.outcome == 'success' && steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@v4
 
       - name: Fail the run if the checks failed
