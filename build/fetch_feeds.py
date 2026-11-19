@@ -97,6 +97,24 @@ def main():
             if d and (now - d).days <= KEEP_DAYS[kind]: keep.append(r)
         store[kind][key] = keep
         status[key] = {'ok': not err, 'got': len(rows), 'new': len(fresh), 'kept': len(keep), 'err': err}
+    # Pulls made through Chrome on the Mac (branch "macpull") cover the sites that refuse this server.
+    mac = {'news': os.path.join(FEEDS, 'mac', 'ksnews_mac.json'), 'opinion': os.path.join(FEEDS, 'mac', 'ksop_mac.json')}
+    for kind, mp in mac.items():
+        if not os.path.exists(mp): continue
+        added = 0
+        for key, rows in json.load(open(mp, encoding='utf-8')).items():
+            if kind == 'opinion' and not key.endswith('#op'): key += '#op'
+            old = store[kind].get(key, []); have = {r[1] for r in old}; fresh = []
+            for r in rows:
+                if len(r) < 4: continue
+                t, u, d = clean(r[0]), clean(r[1]), when(r[2])
+                if t and u.startswith('http') and d and u not in have and (now - d).days <= KEEP_DAYS[kind]:
+                    fresh.append([t, u, email.utils.format_datetime(d), clean(r[3])[:300]]); have.add(u)
+            if fresh:
+                store[kind][key] = fresh + old; added += len(fresh)
+                st = status.setdefault(key, {'ok': False, 'got': 0, 'new': 0, 'kept': len(old), 'err': 'not in feeds.json'})
+                st['mac_new'] = len(fresh); st['kept'] = len(store[kind][key])
+        print('rows added from the Mac pull (%s): %d' % (kind, added))
     os.makedirs(FEEDS, exist_ok=True)
     for k, p in paths.items():
         open(p, 'w', encoding='utf-8').write(json.dumps(store[k], ensure_ascii=False, separators=(',', ':')))
