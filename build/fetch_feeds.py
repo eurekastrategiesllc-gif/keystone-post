@@ -11,6 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FEEDS = os.path.join(HERE, '..', 'raw', 'feeds')
 KEEP_DAYS = {'news': 14, 'opinion': 50}
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
+BOT = 'KeystonePostFeedReader/1.0 (+https://github.com/eurekastrategiesllc-gif/keystone-post)'
 now = datetime.datetime.now(datetime.timezone.utc)
 
 def clean(s):
@@ -50,10 +51,10 @@ def parse(x):
     return out
 
 def pull(f):
-    url = f.get('feed') or f.get('feed_guess')
-    req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': 'application/rss+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.8', 'Accept-Language': 'en-US,en;q=0.9', 'Accept-Encoding': 'gzip'})
-    err = ''
-    for attempt in range(3):
+    url = f.get('feed') or f.get('feed_guess'); err = ''
+    # First ask as a browser would; if the site answers 429, ask once more under the project's own name.
+    for ua in (UA, BOT):
+        req = urllib.request.Request(url, headers={'User-Agent': ua, 'Accept': 'application/rss+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.8', 'Accept-Language': 'en-US,en;q=0.9', 'Accept-Encoding': 'gzip'})
         try:
             with urllib.request.urlopen(req, timeout=25) as r:
                 b = r.read(8_000_000)
@@ -62,10 +63,8 @@ def pull(f):
             return f, rows, '' if rows else 'no items in response'
         except urllib.error.HTTPError as e:
             err = 'HTTP %s' % e.code
-            if e.code not in (429, 503) or attempt == 2: break
-            try: wait = min(int(e.headers.get('Retry-After', '')), 30)
-            except ValueError: wait = 8 * (attempt + 1)
-            time.sleep(wait)
+            if e.code != 429: break
+            time.sleep(3)
         except Exception as e:
             err = ('%s %s' % (type(e).__name__, e))[:120]; break
     return f, [], err

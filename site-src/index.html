@@ -126,6 +126,10 @@ dialog form{display:grid;gap:10px}
 dialog label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
 dialog input,dialog select{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:8px 10px;color:var(--ink)}
 .row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.gate{max-width:420px;margin:40px auto;display:grid;gap:12px;border:1px solid var(--line);border-radius:6px;padding:22px;background:var(--surface)}
+.gate label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.gate input{border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:var(--ink);background:var(--bg)}
+body.locked .rail, body.locked nav.regions, body.locked #asof, body.locked #accessBtn, body.locked footer{display:none}
 @media (max-width:520px){h1{font-size:32px} th,td{padding-left:12px;padding-right:12px}}
 </style>
 </head>
@@ -238,7 +242,16 @@ const chip = p => p==='R'||p==='D' ? `<span class="party ${p}">${p}</span>` : ''
 const who = id => { const c = camp(id); if(!c) return ''; const link = id[0]==='F' ? ` · <a href="https://www.fec.gov/data/candidate/${id.slice(1)}/" target="_blank" rel="noopener">FEC record</a>` : '';
   return `<a class="cname" href="#c-${id}">${esc(c[0])}</a>${chip(c[1])}<div class="dim">${esc(c[2])}${link}</div>` };
 const cache = {};
-const load = p => cache[p] || (cache[p] = fetch(p).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json() }));
+let LOCK = null, KEY = null;
+const b64 = { enc: u8 => { let s = ''; for(const b of u8) s += String.fromCharCode(b); return btoa(s) }, dec: s => Uint8Array.from(atob(s), c=>c.charCodeAt(0)) };
+async function getJSON(p, opt){
+  if(!LOCK){ const r = await fetch(p, opt); if(!r.ok) throw new Error(r.status); return r.json() }
+  const r = await fetch(p+'.enc', opt); if(!r.ok) throw new Error(r.status);
+  const buf = new Uint8Array(await r.arrayBuffer());
+  const plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:buf.slice(0,12)}, KEY, buf.slice(12));
+  return JSON.parse(await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+}
+const load = p => cache[p] || (cache[p] = getJSON(p));
 const bucket = id => { let s = 0; for(const ch of id) s += ch.charCodeAt(0); return s%32 };
 const tiles = (t,key,active) => { const cell = (k,v,l) => key
     ? `<a class="tile" href="#${active===k?key:key+'--funds-'+k}"${active===k?' aria-current="true"':''}><b>${money(v)}</b><span>${l}</span><i>${active===k?'Listed below · click to close':'Click to list every campaign'}</i></a>`
@@ -383,12 +396,50 @@ document.getElementById('accessBtn').onclick = () => { document.getElementById('
 document.getElementById('dlgClose').onclick = () => dlg.close();
 document.getElementById('accessForm').onsubmit = e => { e.preventDefault(); document.getElementById('dlgNote').textContent='Not sent. Sign-ups still need to be connected.' };
 addEventListener('hashchange', route);
-document.getElementById('view').innerHTML = '<p class="empty">Loading filings…</p>';
-fetch('site/data.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json() }).then(d=>{
-  D = d;
-  document.getElementById('asof').textContent = 'Real filings · federal through '+day(d.meta.fed_asof)+' · state through '+day(d.meta.state_through);
-  route();
-}).catch(()=>{ document.getElementById('view').innerHTML = '<p class="empty">The filings file did not load. Reload the page to try again.</p>' });
+function start(){
+  document.getElementById('view').innerHTML = '<p class="empty">Loading filings…</p>';
+  getJSON('site/data.json',{cache:'no-cache'}).then(d=>{
+    D = d;
+    document.getElementById('asof').textContent = 'Real filings · federal through '+day(d.meta.fed_asof)+' · state through '+day(d.meta.state_through);
+    route();
+  }).catch(()=>{ document.getElementById('view').innerHTML = '<p class="empty">The filings file did not load. Reload the page to try again.</p>' });
+}
+async function keyFromCode(code){
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code.trim()), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt:b64.dec(LOCK.salt), iterations:LOCK.iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, true, ['decrypt']);
+}
+async function keyWorks(k){
+  try { const c = b64.dec(LOCK.check); await crypto.subtle.decrypt({name:'AES-GCM', iv:c.slice(0,12)}, k, c.slice(12)); return true } catch(e){ return false }
+}
+function showGate(){
+  document.body.classList.add('locked');
+  document.getElementById('view').innerHTML = `<form class="gate" id="gate"><h2>Access code required</h2>
+    <p class="dim">Keystone Post is open to invited users. Enter the access code you were given.</p>
+    <label for="gateCode">Access code<input id="gateCode" type="password" autocomplete="off" required></label>
+    <div class="row"><button class="btn" type="submit">Unlock</button></div><p class="dim" id="gateMsg" role="status"></p></form>`;
+  const form = document.getElementById('gate'), msg = document.getElementById('gateMsg');
+  document.getElementById('gateCode').focus();
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); msg.textContent = 'Checking…';
+    try {
+      const k = await keyFromCode(document.getElementById('gateCode').value);
+      if(!(await keyWorks(k))){ msg.textContent = 'That code did not work. Check it and try again.'; return }
+      KEY = k;
+      try { localStorage.setItem('kp-key', b64.enc(new Uint8Array(await crypto.subtle.exportKey('raw', k)))) } catch(e){}
+      document.body.classList.remove('locked'); start();
+    } catch(err){ msg.textContent = 'This browser could not check the code. Try a current version of Chrome, Safari, Edge or Firefox.' }
+  });
+}
+document.getElementById('view').innerHTML = '<p class="empty">Loading…</p>';
+fetch('site/lock.json',{cache:'no-cache'}).then(r=>r.ok ? r.json() : null).catch(()=>null).then(async L=>{
+  if(!L) return start();
+  LOCK = L;
+  try {
+    const saved = localStorage.getItem('kp-key');
+    if(saved){ const k = await crypto.subtle.importKey('raw', b64.dec(saved), 'AES-GCM', true, ['decrypt']); if(await keyWorks(k)){ KEY = k; return start() } }
+  } catch(e){}
+  showGate();
+});
 </script>
 </body>
 </html>

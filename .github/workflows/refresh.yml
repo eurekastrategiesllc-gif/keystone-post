@@ -65,6 +65,18 @@ jobs:
           cp -r site _site/site
           touch _site/.nojekyll
 
+      - name: Lock the site with the access code, if one is set
+        if: steps.check.outcome == 'success'
+        env:
+          SITE_PASSCODE: ${{ secrets.SITE_PASSCODE }}
+        run: |
+          if [ -n "$SITE_PASSCODE" ]; then
+            pip install -q cryptography
+            python3 build/encrypt_site.py _site
+          else
+            echo "No SITE_PASSCODE secret is set, so the site is published open."
+          fi
+
       - uses: actions/upload-pages-artifact@v3
         if: steps.check.outcome == 'success'
         with:
