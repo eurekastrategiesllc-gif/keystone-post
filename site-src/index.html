@@ -444,7 +444,8 @@ function campFull(id,det){
   const c = camp(id), tied = ALL.filter(cn=>D.counties[cn].camps.includes(id));
   const where = c[3]==='statewide' ? 'Statewide race' : tied.length ? 'Counties: '+tied.map(cn=>`<a href="#${slug(cn)}">${cn}</a>`).join(', ') : 'No Pennsylvania county on file';
   const fec = id[0]==='F' ? ` · <a href="https://www.fec.gov/data/candidate/${id.slice(1)}/" target="_blank" rel="noopener">FEC record</a>` : '';
-  const src = id[0]==='F' ? `FEC reports through ${day(D.meta.fed_asof)}` : `Department of State reports through ${day(D.meta.state_through)}`;
+  const CYCLE = {1:'sixth Tuesday pre-primary',2:'pre-primary',3:'post-primary',4:'sixth Tuesday pre-election',5:'pre-election',6:'post-election'};
+  const src = id[0]==='F' ? `FEC reports through ${day(D.meta.fed_asof)}` : det.rep && det.rep[1] ? `Latest report on file: ${CYCLE[det.rep[0]] ? CYCLE[det.rep[0]]+' report' : 'report'} filed ${day(det.rep[1])}. State export dated ${day(D.meta.state_export)}` : `Department of State reports through ${day(D.meta.state_through)}`;
   return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>${esc(c[0])}${chip(c[1])}</h1><p class="sub">${esc(c[2])}${fec}. ${where}. ${src}.</p></div>` +
     tiles({raised:c[4],spent:c[5],cash:c[6],pac:c[7]}) +
     `<div class="grid2">${panel('PAC donations received',`${det.pac.length} largest`,table([['From'],['Date'],['Amount',1]],det.pac.map(p=>`<tr><td>${pacLink(p[0])}</td><td class="dim">${day(p[2])}</td><td class="num">${money(p[1])}</td></tr>`),'No itemized PAC or committee gifts on file.'))}

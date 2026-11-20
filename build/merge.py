@@ -109,7 +109,7 @@ dump(SITE+'/area/statewide.json',area(list(range(1,68))))
 B=collections.defaultdict(dict)
 for k in camps:
     s=src[k]
-    B[sum(map(ord,k))%32][k]={'pac':[[p[1],round(p[0]),p[2]] for p in s['pacs'][:50]],'exp':[[e[1],e[2],round(e[0]),e[3]] for e in s['exp'][:50]],'don':sorted(campdon.get(k,[]),key=lambda x:-x[3])[:50]}
+    B[sum(map(ord,k))%32][k]={'pac':[[p[1],round(p[0]),p[2]] for p in s['pacs'][:50]],'exp':[[e[1],e[2],round(e[0]),e[3]] for e in s['exp'][:50]],'don':sorted(campdon.get(k,[]),key=lambda x:-x[3])[:50],'rep':([s.get('lastcycle'),s.get('lastdate')] if k[0]=='S' else None)}
 for b in range(32): dump(SITE+'/camp/%d.json'%b,B.get(b,{}))
 sz=sum(os.path.getsize(os.path.join(d,f)) for d,_,fs in os.walk(SITE) for f in fs)
 print('site files',sum(len(fs) for _,_,fs in os.walk(SITE)),'bytes',sz)
