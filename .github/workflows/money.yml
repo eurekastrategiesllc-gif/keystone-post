@@ -49,6 +49,7 @@ jobs:
         working-directory: build
         env:
           STATE_EXPORT: ${{ steps.src.outputs.state_export }}
+          PYTHONHASHSEED: '0'   # same inputs give the same files, so unchanged data is not re-saved
         run: |
           set -e
           export BUILT=$(TZ=America/New_York date +%F)
@@ -79,6 +80,7 @@ jobs:
             git show FETCH_HEAD:ksnews_store.json > raw/feeds/ksnews_store.json
             git show FETCH_HEAD:ksop_store.json > raw/feeds/ksop_store.json
           fi
+          export PYTHONHASHSEED=0
           (cd build && python3 trend.py | tail -2)
           python3 build/check.py
           python3 - <<'PY'
