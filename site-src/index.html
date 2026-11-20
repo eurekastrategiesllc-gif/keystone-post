@@ -534,7 +534,6 @@ function showGate(){
       const k = await keyFromCode(document.getElementById('gateCode').value);
       if(!(await keyWorks(k))){ msg.textContent = 'That code did not work. Check it and try again.'; return }
       KEY = k;
-      try { localStorage.setItem('kp-key', b64.enc(new Uint8Array(await crypto.subtle.exportKey('raw', k)))) } catch(e){}
       document.body.classList.remove('locked'); start();
     } catch(err){ msg.textContent = 'This browser could not check the code. Try a current version of Chrome, Safari, Edge or Firefox.' }
   });
@@ -543,10 +542,7 @@ document.getElementById('view').innerHTML = '<p class="empty">Loading…</p>';
 fetch('site/lock.json',{cache:'no-cache'}).then(r=>r.ok ? r.json() : null).catch(()=>null).then(async L=>{
   if(!L) return start();
   LOCK = L;
-  try {
-    const saved = localStorage.getItem('kp-key');
-    if(saved){ const k = await crypto.subtle.importKey('raw', b64.dec(saved), 'AES-GCM', true, ['decrypt']); if(await keyWorks(k)){ KEY = k; return start() } }
-  } catch(e){}
+  try { localStorage.removeItem('kp-key') } catch(e){}   // the code is not remembered: clear any copy saved by an earlier version
   showGate();
 });
 </script>
