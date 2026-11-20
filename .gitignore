@@ -2,3 +2,14 @@ __pycache__/
 build/pull_status.json
 _site/
 raw/feeds/mac/
+dl/
+raw/weball26/
+raw/cm26/
+raw/ccl26/
+raw/pas226/
+raw/oppexp26/
+raw/pa_dos_2026/
+build/indiv/
+build/state.json
+build/fed.json
+build/money_sources.new.json

@@ -1,0 +1,103 @@
+name: Check for new campaign money filings
+
+on:
+  schedule:
+    - cron: '23 3,9,15,21 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if no source file changed
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: money
+  cancel-in-progress: false
+
+jobs:
+  money:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: See whether any source file is newer
+        id: src
+        run: python3 build/money_check.py
+
+      - name: Download the filings
+        if: steps.src.outputs.changed == 'true' || inputs.force
+        run: |
+          set -e
+          UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
+          mkdir -p dl raw/pa_dos_2026
+          for f in weball26 cm26 ccl26 pas226 oppexp26 indiv26; do
+            curl -sS -L --fail --retry 3 -A "$UA" -o dl/$f.zip "https://www.fec.gov/files/bulk-downloads/2026/$f.zip"
+          done
+          curl -sS -L --fail --retry 3 -A "$UA" -o dl/pa.zip "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/campaign-finance/campaign-finance-data/2026.zip"
+          ls -la dl
+          for f in weball26 cm26 ccl26 pas226 oppexp26; do mkdir -p raw/$f && unzip -o -q dl/$f.zip -d raw/$f; done
+          unzip -o -q -j dl/pa.zip -d raw/pa_dos_2026
+          ls -la raw/pa_dos_2026 raw/weball26 raw/cm26 raw/ccl26 raw/pas226 raw/oppexp26
+
+      - name: Rebuild the money data
+        if: steps.src.outputs.changed == 'true' || inputs.force
+        working-directory: build
+        env:
+          STATE_EXPORT: ${{ steps.src.outputs.state_export }}
+        run: |
+          set -e
+          export BUILT=$(TZ=America/New_York date +%F)
+          export STATE_THROUGH=$(python3 money_meta.py)
+          echo "state export $STATE_EXPORT, state through $STATE_THROUGH, built $BUILT"
+          python3 state.py | tail -3
+          python3 fed.py | tail -2
+          python3 - <<'PY'
+          import json
+          C = json.load(open('fed.json'))['C']; ids = set()
+          for l in open('../raw/ccl26/ccl.txt'):
+              p = l.rstrip('\n').split('|')
+              if p[0] in C and p[5] in ('P', 'A') and p[2] == '2026': ids.add(p[3])
+          open('cmtes.txt', 'w').write('\n'.join(sorted(ids)) + '\n'); print('committees', len(ids))
+          PY
+          mkdir -p indiv
+          unzip -p ../dl/indiv26.zip itcont.txt | grep -F -f cmtes.txt > indiv/itcont_pa.txt || true
+          wc -l indiv/itcont_pa.txt
+          cp ../site/data.json /tmp/site_data_before.json
+          python3 merge.py | tail -1
+          python3 extra.py | head -4
+
+      - name: Put news and trending back and run the checks
+        if: steps.src.outputs.changed == 'true' || inputs.force
+        run: |
+          set -e
+          if git fetch --depth=1 origin state 2>/dev/null; then
+            git show FETCH_HEAD:ksnews_store.json > raw/feeds/ksnews_store.json
+            git show FETCH_HEAD:ksop_store.json > raw/feeds/ksop_store.json
+          fi
+          (cd build && python3 trend.py | tail -2)
+          python3 build/check.py
+          python3 - <<'PY'
+          import json
+          a = json.load(open('/tmp/site_data_before.json')); b = json.load(open('site/data.json'))
+          ta = sum(v[4] for v in a['camps'].values()); tb = sum(v[4] for v in b['camps'].values())
+          print('campaigns %d -> %d, total raised %d -> %d' % (len(a['camps']), len(b['camps']), ta, tb))
+          assert len(b['camps']) >= len(a['camps']) * 0.95, 'campaign count fell by more than 5%'
+          print({k: b['meta'][k] for k in ('fed_asof', 'state_export', 'state_through', 'built')})
+          PY
+
+      - name: Save the result and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv build/money_sources.new.json build/money_sources.json
+          git config user.name "keystone-post-bot"; git config user.email "actions@users.noreply.github.com"
+          git add build/money_sources.json build/cmtes.txt site data.json 2>/dev/null || git add build/money_sources.json site data.json
+          if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
+          git commit -q -m "Money data check $(date -u +%F)"
+          git push -q
+          gh workflow run refresh.yml --ref main
