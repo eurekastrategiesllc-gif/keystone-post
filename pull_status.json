@@ -1,0 +1,441 @@
+{
+ "at": "2026-11-21T16:05:46Z",
+ "ok": 40,
+ "total": 62,
+ "hosts": {
+  "penncapital-star.com": {
+   "ok": true,
+   "got": 100,
+   "new": 10,
+   "kept": 90,
+   "err": ""
+  },
+  "triblive.com": {
+   "ok": true,
+   "got": 25,
+   "new": 0,
+   "kept": 187,
+   "err": ""
+  },
+  "whyy.org": {
+   "ok": true,
+   "got": 20,
+   "new": 2,
+   "kept": 69,
+   "err": ""
+  },
+  "witf.org": {
+   "ok": true,
+   "got": 50,
+   "new": 0,
+   "kept": 70,
+   "err": ""
+  },
+  "levittownnow.com": {
+   "ok": true,
+   "got": 7,
+   "new": 0,
+   "kept": 17,
+   "err": ""
+  },
+  "6abc.com": {
+   "ok": true,
+   "got": 20,
+   "new": 3,
+   "kept": 113,
+   "err": ""
+  },
+  "wesb.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 31,
+   "err": ""
+  },
+  "fultoncountynews.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 20,
+   "err": ""
+  },
+  "nbcphiladelphia.com": {
+   "ok": true,
+   "got": 51,
+   "new": 5,
+   "kept": 122,
+   "err": ""
+  },
+  "wnep.com": {
+   "ok": true,
+   "got": 40,
+   "new": 0,
+   "kept": 98,
+   "err": ""
+  },
+  "timesobserver.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 41,
+   "err": ""
+  },
+  "mychesco.com": {
+   "ok": true,
+   "got": 30,
+   "new": 27,
+   "kept": 118,
+   "err": ""
+  },
+  "lockhaven.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 42,
+   "err": ""
+  },
+  "northpennnow.com": {
+   "ok": true,
+   "got": 10,
+   "new": 1,
+   "kept": 50,
+   "err": ""
+  },
+  "butlerradio.com": {
+   "ok": true,
+   "got": 10,
+   "new": 1,
+   "kept": 33,
+   "err": ""
+  },
+  "lewistownsentinel.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 51,
+   "err": ""
+  },
+  "gantnews.com": {
+   "ok": true,
+   "got": 10,
+   "new": 2,
+   "kept": 45,
+   "err": ""
+  },
+  "yourdailylocal.com": {
+   "ok": true,
+   "got": 10,
+   "new": 1,
+   "kept": 25,
+   "err": ""
+  },
+  "heraldstandard.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 47,
+   "err": ""
+  },
+  "beavercountian.com": {
+   "ok": true,
+   "got": 50,
+   "new": 20,
+   "kept": 29,
+   "err": ""
+  },
+  "connectradio.fm": {
+   "ok": true,
+   "got": 10,
+   "new": 1,
+   "kept": 54,
+   "err": ""
+  },
+  "spotlightpa.org": {
+   "ok": true,
+   "got": 50,
+   "new": 10,
+   "kept": 39,
+   "err": ""
+  },
+  "abc27.com": {
+   "ok": true,
+   "got": 50,
+   "new": 9,
+   "kept": 157,
+   "err": ""
+  },
+  "altoonamirror.com": {
+   "ok": true,
+   "got": 10,
+   "new": 9,
+   "kept": 80,
+   "err": ""
+  },
+  "pennlive.com": {
+   "ok": true,
+   "got": 50,
+   "new": 43,
+   "kept": 388,
+   "err": ""
+  },
+  "2822news.com": {
+   "ok": true,
+   "got": 50,
+   "new": 1,
+   "kept": 113,
+   "err": ""
+  },
+  "sungazette.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 50,
+   "err": ""
+  },
+  "lehighvalleylive.com": {
+   "ok": true,
+   "got": 50,
+   "new": 27,
+   "kept": 311,
+   "err": ""
+  },
+  "statecollege.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 33,
+   "err": ""
+  },
+  "yourerie.com": {
+   "ok": true,
+   "got": 10,
+   "new": 0,
+   "kept": 45,
+   "err": ""
+  },
+  "lebtown.com": {
+   "ok": true,
+   "got": 40,
+   "new": 0,
+   "kept": 66,
+   "err": ""
+  },
+  "wtaj.com": {
+   "ok": true,
+   "got": 18,
+   "new": 2,
+   "kept": 54,
+   "err": ""
+  },
+  "observer-reporter.com": {
+   "ok": true,
+   "got": 6,
+   "new": 1,
+   "kept": 42,
+   "err": ""
+  },
+  "penncapital-star.com#op": {
+   "ok": true,
+   "got": 100,
+   "new": 80,
+   "kept": 20,
+   "err": ""
+  },
+  "lancasteronline.com": {
+   "ok": true,
+   "got": 25,
+   "new": 21,
+   "kept": 62,
+   "err": ""
+  },
+  "northcentralpa.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 81,
+   "err": "HTTP 429"
+  },
+  "wfmz.com": {
+   "ok": true,
+   "got": 50,
+   "new": 1,
+   "kept": 74,
+   "err": ""
+  },
+  "tiogapublishing.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 50,
+   "err": "HTTP 429"
+  },
+  "susqcoindy.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "sharonherald.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 51,
+   "err": "HTTP 429"
+  },
+  "cumberlink.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 25,
+   "err": "HTTP 429"
+  },
+  "ncnewsonline.com": {
+   "ok": true,
+   "got": 50,
+   "new": 26,
+   "kept": 24,
+   "err": ""
+  },
+  "thedailyreview.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 12,
+   "err": "HTTP 429"
+  },
+  "dailyitem.com": {
+   "ok": true,
+   "got": 50,
+   "new": 9,
+   "kept": 66,
+   "err": ""
+  },
+  "thecourierexpress.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 56,
+   "err": "HTTP 429"
+  },
+  "thederrick.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "tribdem.com": {
+   "ok": true,
+   "got": 50,
+   "new": 5,
+   "kept": 132,
+   "err": ""
+  },
+  "indianagazette.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 64,
+   "err": "HTTP 429"
+  },
+  "huntingdondailynews.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "meadvilletribune.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 51,
+   "err": "HTTP 429"
+  },
+  "gettysburgtimes.com": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "lancasteronline.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "dailyitem.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 54,
+   "err": "HTTP 429"
+  },
+  "thedailyreview.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "sharonherald.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 2,
+   "err": "HTTP 429"
+  },
+  "cumberlink.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 10,
+   "err": "HTTP 429"
+  },
+  "meadvilletribune.com#op": {
+   "ok": true,
+   "got": 50,
+   "new": 50,
+   "kept": 0,
+   "err": ""
+  },
+  "tiogapublishing.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "ncnewsonline.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "thecourierexpress.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  },
+  "indianagazette.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 56,
+   "err": "HTTP 429"
+  },
+  "gettysburgtimes.com#op": {
+   "ok": false,
+   "got": 0,
+   "new": 0,
+   "kept": 0,
+   "err": "HTTP 429"
+  }
+ }
+}
