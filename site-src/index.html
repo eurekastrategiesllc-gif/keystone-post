@@ -144,6 +144,16 @@ body.locked .rail, body.locked nav.regions, body.locked #asof, body.locked #acce
 .maplegend a:hover{color:var(--accent);text-decoration:underline}
 .maplegend i{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--flag-blue);flex:none}
 @media (max-width:520px){h1{font-size:32px} th,td{padding-left:12px;padding-right:12px}}
+
+/* consultant scoreboard */
+.seg{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+.rec{font:700 17px/1 var(--display);letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rec.win{color:var(--good)} .rec.lose{color:var(--rep)}
+.res{display:inline-block;border-radius:3px;padding:1px 7px;font-size:12px;font-weight:600;white-space:nowrap;border:1px solid var(--line);color:var(--muted)}
+.res.win{border-color:var(--good);color:var(--good)} .res.lose{border-color:var(--rep);color:var(--rep)}
+.rank{color:var(--muted);font-weight:600;width:1%}
+.csel{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;font-size:13px}
+.note{color:var(--muted);font-size:13px;margin:0;max-width:80ch}
 </style>
 </head>
 <body>
@@ -181,6 +191,7 @@ body.locked .rail, body.locked nav.regions, body.locked #asof, body.locked #acce
     <p><strong>Sources.</strong> Congress: FEC bulk files (candidate summaries, committee-to-candidate contributions, individual contributions, operating expenditures) for the 2025–26 cycle. Congressional donor amounts add up each person's itemized gifts to one campaign and do not subtract refunds. Governor, lieutenant governor, legislature, PACs and party committees: Pennsylvania Department of State full campaign finance export dated November 6, 2026, covering regular reports through the October 19 pre-election filing. District and ZIP code to county matching: U.S. Census Bureau 2020 relationship files.</p>
     <p><strong>News.</strong> Headlines come from the public RSS feeds of about 50 Pennsylvania outlets, checked automatically about every 30 minutes, and are matched to counties by county, town and township names, so a few matches will be wrong. Where a county has fewer than three stories of its own, the panel adds stories from nearby counties and statewide outlets, marked Regional story or Statewide story.</p>
     <p><strong>Trending.</strong> Issues are counted from the same local feeds plus 12 opinion pages. Tone tags are shown only where a story or letter shows residents reacting, plus 108 older items found by a web search of all 67 counties (56 had findings; items date from late 2025 through 2026, and summaries are written from headlines and excerpts). Web findings skew toward complaints, because that is what public meetings and the reporting on them mostly record. Social media is not included. This is a reading of coverage, not a poll.</p>
+    <p><strong>Consultants.</strong> The scoreboard adds up what candidate, party and caucus committees reported paying each firm, from the same state and federal filings, and sets it beside how those candidates did. Primary results and unofficial November returns come from the Department of State election returns site, read November 26, 2026. Transfers between committees, payroll, postage, ad platforms, broadcasters, card processors, everyday vendors, lawyers, bookkeepers and payments to individual people are left out, and so are firms paid under $10,000. Committees are matched to candidates by name and district, and a few matches will be wrong.</p>
     <p><strong>Use limits.</strong> Federal law bars using individual contributor information from FEC reports to solicit contributions or for commercial purposes.</p>
     <p><strong>What is missing.</strong> County and municipal candidates file with their county election office, so they are not here. Nothing after the October pre-election reports is in yet; post-election reports are due December 3, 2026. State cash on hand is an estimate from each filer's latest report. Committees are placed in the county of their mailing address. Totals add up every filer's receipts, so money a PAC passes to a campaign is counted at both. News and Trending refresh automatically. Campaign money is a snapshot built November 17, 2026.</p>
   </footer>
@@ -453,13 +464,68 @@ function campFull(id,det){
     purposePanel(det,c) + panel('Expenses',`${det.exp.length} largest payments`,table([['Paid to'],['Purpose'],['Date'],['Amount',1]],det.exp.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1]||'No purpose filed')}</td><td class="dim">${day(x[3])}</td><td class="num">${money(x[2])}</td></tr>`),'No itemized expenses on file.'));
 }
 
+
+// ---- consultant scoreboard: site/cons/board.json, built by build/cons.py ----
+// firm: {n name, t type, tot, w, l, cw, cl (races under 10 points), wd, ld (paid by winners, losers), nc, mix, c: [[client, race, paid, result, margin, close, campaign id, unopposed]]}
+const CS = {show:'all', type:'all', sort:'tot', all:false, county:''};
+const fslug = n => n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const PNAME = {R:'Republican', D:'Democratic', all:'Republican and Democratic'};
+const rec = (w,l) => w+l ? `<span class="rec ${l>w?'lose':w>l?'win':''}">${w}-${l}</span>` : '<span class="dim">None scored</span>';
+const pts = m => m==null ? '' : ' by '+(m<0.05?'under 0.1':m.toFixed(1))+(m===1?' point':' points');
+const result = r => r[3]==='W' ? `<span class="res win">Won${r[7]?', unopposed':pts(r[4])}</span>`
+  : r[3]==='LG' ? `<span class="res lose">Lost in November${pts(r[4])}</span>`
+  : r[3]==='LP' ? `<span class="res lose">Lost the primary${pts(r[4])}</span>` : '<span class="res">Not scored</span>';
+const cbtn = (k,v,label) => `<button type="button" class="chip" data-cs="${k}:${v}" aria-pressed="${String(CS[k])===String(v)}">${label}</button>`;
+function consView(p,B){
+  const lv = state.level, ps = p==='all' ? ['R','D'] : [p];
+  const lvOf = r => r[1].startsWith('U.S. House') ? 'congress' : /^(Governor|Lt\. Governor)$/.test(r[1]) ? 'statewide' : r[1].startsWith('State ') ? 'legislature' : r[1].startsWith('Party') ? 'county' : r[6]&&r[6][0]==='F' ? 'congress' : r[6]&&camp(r[6])&&camp(r[6])[3]==='statewide' ? 'statewide' : 'legislature';
+  const ci = CS.county ? ALL.indexOf(CS.county)+1 : 0;
+  const cut = (f,q) => { if(lv==='all' && !ci) return {...f,p:q}; const c = f.c.filter(r=>(lv==='all'||lvOf(r)===lv) && (!ci || (r[9]||[]).includes(ci))), sc = c.filter(r=>r[3]), W = sc.filter(r=>r[3]==='W'), L = sc.filter(r=>r[3]!=='W'); return {...f, p:q, c, tot:sum(c,r=>r[2]), w:W.length, l:L.length, cw:W.filter(r=>r[5]).length, cl:L.filter(r=>r[5]).length, wd:sum(W,r=>r[2]), ld:sum(L,r=>r[2])} };
+  const all = ps.flatMap(q=>B[q].map(f=>cut(f,q))).filter(f=>f.tot>0), types = [...new Set(all.map(f=>f.t))].sort();
+  let F = all.filter(f=>(CS.type==='all'||f.t===CS.type) && (CS.show==='all' || (CS.show==='lose'&&f.l>f.w) || (CS.show==='win'&&f.w>f.l)));
+  F = F.slice().sort(CS.sort==='ld' ? desc(f=>f.ld) : CS.sort==='n' ? desc(f=>f.w+f.l) : desc(f=>f.tot));
+  const shown = CS.all ? F : F.slice(0,50);
+  const lost = f => { const L = f.c.filter(r=>r[3]==='LG'||r[3]==='LP').map(r=>r[0].replace(/ (Jr|Sr|II|III|IV)\.?$/i,'').split(' ').slice(-1)[0]); return L.length ? ' · lost: '+esc(L.slice(0,3).join(', '))+(L.length>3?' +'+(L.length-3):'') : '' };
+  const rows = shown.map((f,i)=>`<tr><td class="rank">${i+1}</td><td><a class="cname" href="#f-${f.p.toLowerCase()}-${fslug(f.n)}">${esc(f.n)}</a>${p==='all'?chip(f.p):''}<div class="dim">${esc(f.t)} · ${f.w+f.l} scored ${f.w+f.l===1?'client':'clients'}${lost(f)}</div></td><td class="num">${f.ld?money(f.ld):'<span class="dim">$0</span>'}</td><td class="num">${money(f.tot)}</td><td class="num">${rec(f.w,f.l)}</td><td class="num">${rec(f.cw,f.cl)}</td></tr>`);
+  const m = B.meta, word = CS.show==='lose'?'with losing records':CS.show==='win'?'with winning records':'';
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a></p><h1>Consultant scoreboard${chip(p)}</h1>
+    <p class="sub">Firms paid by 2026 ${PNAME[p]} candidates for governor, lieutenant governor, Congress and the legislature, and by ${PNAME[p]} party and caucus committees. A win means the client won in November. A loss means the client lost the primary or the general election. Each client counts once per firm.</p></div>
+    <div class="seg"><div class="group"><span>Record</span>${cbtn('show','all','All firms')}${cbtn('show','win','Winning')}${cbtn('show','lose','Losing')}</div>
+    <div class="group"><span>Rank by</span>${cbtn('sort','tot','Total paid')}${cbtn('sort','ld','Paid by losing clients')}${cbtn('sort','n','Most clients')}</div>
+    <label class="group"><span>Work</span><select class="csel" data-csel="type"><option value="all">All kinds</option>${types.map(t=>`<option${CS.type===t?' selected':''}>${esc(t)}</option>`).join('')}</select></label></div>` +
+    (ci ? `<p class="note"><strong>${esc(CS.county)} County.</strong> Counting only candidates for Congress and the legislature whose districts include this county. Statewide races, party money and officials who were not on the ballot are left out. <button type="button" class="chip" data-cs="county:">Show all counties</button> <a href="#${slug(CS.county)}">Open the ${esc(CS.county)} County page</a></p>` : '') + `<div class="tiles"><div class="tile"><b>${F.length}</b><span>Firms ${word}</span></div><div class="tile"><b>${money(sum(F,f=>f.tot))}</b><span>Paid to them</span></div><div class="tile"><b>${money(sum(F,f=>f.ld))}</b><span>From clients who lost</span></div><div class="tile"><b>${money(sum(F,f=>f.wd))}</b><span>From clients who won</span></div></div>` +
+    panel(`${PNAME[p]} firms ${word}${lv==='all'?'':' · '+LEVELS.find(x=>x[0]===lv)[1]+' only'}${ci?' in '+esc(CS.county)+' County':''}`, `${shown.length} of ${F.length} shown`, table([['#'],['Firm'],['Paid by losing clients',1],['Total paid',1],['Won-lost',1],['Close races',1]], rows, 'No firm matches these filters.')) +
+    (F.length>shown.length ? `<p><button type="button" class="btn ghost" data-cs="all:true">Show all ${F.length} firms</button></p>` : '') +
+    `<p class="note">The Races and Party buttons and the county menu at the top of the page filter this list. Read this before quoting it. Spending is from state reports through ${day(m.state_through)} and federal reports mostly through ${day(m.fed_through)}, so the last weeks of the campaign are not in yet. ${esc(m.results_note)} A client is a candidate who paid the firm at least ${money(m.min_client)}. Party and caucus money counts in a firm's total but not in its record. Spending by outside groups and PACs is not included. Close races are those decided by under ${m.close} points. Payments to individual people, lawyers and bookkeepers are left out. Firms are grouped by the name on the filing, so one company filed under two names can appear twice, and the kind of work comes from the purpose the campaign wrote down. A record says how a firm's clients did; it does not say why.</p>`;
+}
+function firmView(p,key,B){
+  const f = B[p].find(x=>fslug(x.n)===key);
+  if(!f) return missing('consulting firm');
+  const scored = f.c.filter(r=>r[3]), rest = f.c.filter(r=>!r[3]);
+  const row = r => `<tr><td>${r[6]&&camp(r[6]) ? `<a class="cname" href="#c-${r[6]}">${esc(r[0])}</a>` : esc(r[0])}<div class="dim">${esc(r[1])}</div></td><td>${result(r)}</td><td class="num">${money(r[2])}</td></tr>`;
+  return `<div><p class="crumb"><a href="#statewide">Pennsylvania</a> · <a href="#consultants--${p.toLowerCase()}">Consultant scoreboard</a></p><h1>${esc(f.n)}<span class="party ${p}">${p}</span></h1>
+    <p class="sub">${esc(f.t)}. What ${PNAME[p]} campaigns and committees reported paying this firm for: ${f.mix.map(x=>esc(x[0]).toLowerCase()+' '+money(x[1])).join(', ')}.</p></div>` +
+    `<div class="tiles"><div class="tile"><b>${money(f.tot)}</b><span>Total paid</span></div><div class="tile"><b>${f.w}-${f.l}</b><span>Clients won-lost</span></div><div class="tile"><b>${f.cw}-${f.cl}</b><span>In close races</span></div><div class="tile"><b>${money(f.ld)}</b><span>From clients who lost</span></div></div>` +
+    `<div class="grid2">${panel('Clients with a result', `${scored.length} candidates`, table([['Candidate'],['Result'],['Paid',1]], scored.map(row), 'No client of this firm was on the ballot with a result.'))}
+    ${panel('Other payers', `${rest.length}${f.more?' largest':''}, not scored`, table([['Committee or candidate'],[''],['Paid',1]], rest.map(row), 'None.'))}</div>` +
+    `<p class="note">Payments are from reports through ${day(B.meta.state_through)} (state) and mostly ${day(B.meta.fed_through)} (federal). Other payers are party and caucus committees, candidates and officials who were not on the 2026 ballot, and candidates who paid the firm under ${money(B.meta.min_client)}.</p>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-cs]'); if(!b) return; const [k,v] = b.dataset.cs.split(':'); CS[k] = v==='true' ? true : v; if(k!=='all') CS.all = false; route() });
+document.addEventListener('change', e => { const el = e.target.closest('[data-csel]'); if(!el) return; CS[el.dataset.csel] = el.value; CS.all = false; route() });
+
 let token = 0;
 function route(){
   if(!D) return;
   const h = location.hash.replace('#','') || 'statewide', view = document.getElementById('view'), mine = ++token;
   const later = (p,render) => { view.innerHTML = '<p class="empty">Loading details…</p>'; p.then(x=>{ if(mine===token) view.innerHTML = render(x) }).catch(()=>{ if(mine===token) view.innerHTML = '<p class="empty">Those details did not load. Reload the page to try again.</p>' }) };
   let active = 'statewide', county = '';
-  if(h.startsWith('c-') && camp(h.slice(2))){
+  if(h==='consultants' || h.startsWith('consultants--')){
+    const hp = h.endsWith('--d') ? 'D' : h.endsWith('--r') ? 'R' : '';
+    if(hp && CS.h!==h){ state.party = hp; document.querySelectorAll('#partyChips .chip').forEach((x,i)=>x.setAttribute('aria-pressed',String(PARTIES[i][0]===hp))) }
+    CS.h = h; county = CS.county; const p = state.party; later(load('site/cons/board.json'), B=>consView(p,B)); active = 'consultants';
+  } else if(/^f-[rd]-/.test(h)){
+    CS.h = h; const p = h[2].toUpperCase(); later(load('site/cons/board.json'), B=>firmView(p,h.slice(4),B)); active = 'consultants';
+  } else if(h.startsWith('c-') && camp(h.slice(2))){
     const id = h.slice(2); later(load('site/camp/'+bucket(id)+'.json'), f=>campFull(id, f[id]||{pac:[],exp:[],don:[]}));
     active = '';
   } else if(h.startsWith('p-')){
@@ -483,7 +549,7 @@ function route(){
   }
   document.querySelectorAll('#regionNav a').forEach(x=>x.getAttribute('href')==='#'+active?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
   document.getElementById('countyPick').value = county;
-  if((h.includes('--') && !h.includes('--funds-')) || /^[cpidm]-/.test(h)) scrollTo(0,0);
+  if((h.includes('--') && !h.includes('--funds-') && !h.startsWith('consultants')) || /^[cpidmf]-/.test(h)) scrollTo(0,0);
 }
 function chips(id,list,key){
   const el = document.getElementById(id);
@@ -495,11 +561,11 @@ function chips(id,list,key){
   });
 }
 document.getElementById('regionNav').innerHTML = `<a href="#statewide">Statewide <small>67</small></a>` +
-  Object.entries(REGIONS).map(([k,r])=>`<a href="#${k}">${r.name} <small>${r.counties.length}</small></a>`).join('');
+  Object.entries(REGIONS).map(([k,r])=>`<a href="#${k}">${r.name} <small>${r.counties.length}</small></a>`).join('') + `<a href="#consultants">Consultants</a>`;
 chips('levelChips',LEVELS,'level'); chips('partyChips',PARTIES,'party');
 const pickEl = document.getElementById('countyPick');
 pickEl.innerHTML = `<option value="">Choose a county</option>` + Object.entries(REGIONS).map(([k,r])=>`<optgroup label="${r.name}">${r.counties.map(c=>`<option>${c}</option>`).join('')}</optgroup>`).join('');
-pickEl.onchange = () => { if(pickEl.value) location.hash = slug(pickEl.value) };
+pickEl.onchange = () => { if(location.hash.startsWith('#consultants')){ CS.county = pickEl.value; CS.all = false; route() } else if(pickEl.value) location.hash = slug(pickEl.value) };
 const dlg = document.getElementById('accessDlg');
 document.getElementById('accessBtn').onclick = () => { document.getElementById('dlgNote').textContent='This form is not connected yet. Nothing is sent or stored.'; dlg.showModal() };
 document.getElementById('dlgClose').onclick = () => dlg.close();
