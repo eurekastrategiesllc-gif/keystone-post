@@ -66,7 +66,9 @@ def fetch_rows():
             except Exception as e:
                 if code == 'LTG' and t == 'G': continue   # lieutenant governor is on the governor's ticket in November
                 raise
-            rows_from(x, t, code, rows)
+            if not isinstance(x, dict):
+                print('no table for %s %s: %r' % (t, code, str(x)[:120])); continue   # the counts are checked afterwards
+            n = len(rows); rows_from(x, t, code, rows); print(t, code, len(rows) - n, 'candidates')
     return rows
 
 def races_from(rows):
