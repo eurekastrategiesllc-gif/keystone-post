@@ -1,0 +1,16 @@
+{
+ "_about": "Hand-kept list for the consultant scoreboard. alias: payee spelling -> firm name to show (only spelling variants of the same firm; spellings that differ only by spaces merge on their own). drop: payees that are not consultants. Edit and rerun cons.py.",
+ "alias": {
+  "REAM PRINTING COMP": "Ream Printing", "WIRE REAM PRINTING": "Ream Printing", "REAM PRINTING": "Ream Printing",
+  "RED MAVERICK": "Red Maverick Media",
+  "AXIOM": "Axiom Strategies",
+  "COMMUNICATION CONCEPTS": "Communications Concepts",
+  "BUYING TIME": "Buying Time Media",
+  "ASCEND DIGITAL": "Ascend Digital Strategies",
+  "BATTLE AX STRATEGIES": "Battle Axe Digital", "BATTLEAXE DIGITAL": "Battle Axe Digital",
+  "COLDSPARK MEDIA": "ColdSpark", "COLD SPARK": "ColdSpark", "COLDSPARK": "ColdSpark",
+  "BRABENDERCOX": "BrabenderCox",
+  "GPS IMPACT": "GPS Impact", "LC MEDIA": "LC Media", "JFH STRATEGIES": "JFH Strategies", "RGB POLITICS": "RGB Politics", "LN CONSULTING": "LN Consulting", "WRS MEDIA": "WRS Media", "SB DIGITAL": "SB Digital", "RWT PRODUCTION": "RWT Production", "HSP DIRECT": "HSP Direct", "GDA WINS": "GDA Wins", "MDW COMMUNICATIONS": "MDW Communications", "IFA HOLDINGS": "IFA Holdings", "AX MEDIA": "AX Media", "KBG DATA": "KBG Data", "DSPOLITICAL": "DSPolitical", "NWF STRATEGIES": "NWF Strategies", "SPB STRATEGIES": "SPB Strategies", "TML COMMUNICATIONS": "TML Communications", "MJM STRATEGIES": "MJM Strategies", "RS STRATEGIES": "RS Strategies", "DTR CONSULTING": "DTR Consulting", "KC CONSULTING": "KC Consulting", "KSB CONSULTING GROUP": "KSB Consulting Group", "JLH FUNDRAISING": "JLH Fundraising", "HM CONSULTING": "HM Consulting", "MBA CONSULTING GROUP": "MBA Consulting Group", "FLS CONNECT": "FLS Connect", "MDI IMAGING AND MAIL": "MDI Imaging and Mail", "GP3 MIX MEDIA": "GP3 Mix Media", "BF DIRECT": "BF Direct", "LV PRINT CENTER": "LV Print Center", "CP PRINTING SOLUTIONS": "CP Printing Solutions", "CFO COMPLIANCE": "CFO Compliance"
+ },
+ "drop": ["JET A", "ADVANCED AVIATION TEAM", "PREMIERE TRANSPORTATION", "GOPAC", "FUNDRAISING", "DIRECT MAIL FUNDRAISING", "5411", "EVERYACTION", "SCALE TO WIN", "NUMERO", "ARKENSTONE CAPITAL", "JOHN F FISH", "AWALL", "ADVANTAGE", "CARTER COLE"]
+}

@@ -72,6 +72,19 @@ jobs:
           python3 merge.py | tail -1
           python3 extra.py | head -4
 
+      # The consultant scoreboard is rebuilt from the same filings. If it fails, the old board is kept and the money data still goes out.
+      - name: Rebuild the consultant scoreboard
+        if: steps.src.outputs.changed == 'true' || inputs.force
+        continue-on-error: true
+        working-directory: build
+        run: |
+          cp ../site/cons/board.json /tmp/board_before.json
+          ok=1
+          python3 cons.py > /tmp/cons.log 2>&1 || ok=0
+          tail -6 /tmp/cons.log
+          if [ "$ok" = 1 ]; then python3 cons_check.py /tmp/board_before.json ../site/cons/board.json || ok=0; fi
+          if [ "$ok" = 0 ]; then cp /tmp/board_before.json ../site/cons/board.json; echo "Scoreboard rebuild failed; kept the old board."; exit 1; fi
+
       - name: Put news and trending back and run the checks
         if: steps.src.outputs.changed == 'true' || inputs.force
         run: |

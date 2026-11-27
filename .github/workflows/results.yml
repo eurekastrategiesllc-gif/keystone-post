@@ -1,0 +1,42 @@
+name: Check for new election results
+
+# Reads the Department of State returns site. When the numbers differ from the newest raw/pa_results_*.json,
+# saves a new file and starts a full money rebuild, which rebuilds the consultant scoreboard with them.
+on:
+  schedule:
+    - cron: '47 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['build/results.py', '.github/workflows/results.yml']
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: results
+  cancel-in-progress: false
+
+jobs:
+  results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the returns site
+        id: pull
+        run: python3 build/results.py fetch
+
+      - name: Save new results and rebuild
+        if: steps.pull.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "keystone-post-bot"; git config user.email "actions@users.noreply.github.com"
+          git add raw/pa_results_*.json
+          git commit -q -m "Election results $(date -u +%F)"
+          git pull -q --rebase origin main
+          git push -q
+          gh workflow run money.yml --ref main -f force=true
