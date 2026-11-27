@@ -30,13 +30,16 @@ jobs:
         run: python3 build/results.py fetch
 
       - name: Save new results and rebuild
-        if: steps.pull.outputs.changed == 'true'
+        # A commit to this file or results.py whose message contains [rebuild scoreboard] forces the rebuild even with no new results.
+        if: steps.pull.outputs.changed == 'true' || contains(github.event.head_commit.message, '[rebuild scoreboard]')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "keystone-post-bot"; git config user.email "actions@users.noreply.github.com"
           git add raw/pa_results_*.json
-          git commit -q -m "Election results $(date -u +%F)"
-          git pull -q --rebase origin main
-          git push -q
+          if ! git diff --cached --quiet; then
+            git commit -q -m "Election results $(date -u +%F)"
+            git pull -q --rebase origin main
+            git push -q
+          fi
           gh workflow run money.yml --ref main -f force=true
